@@ -1,11 +1,14 @@
 # TO-DO list
-[ ] decide the language
+[x] decide the language
 [ ] organaize the progect
 [ ] things i want it to do
-[ ] decide the database
+[x] decide the database
+
+
+the make file will be do the sql database
 
 # language
-- go
+- go <- this maybe 
 - C
 - java
 or new one
@@ -19,4 +22,4 @@ or new one
 - balance controll
 
 # database
-idk man
+SQLite
