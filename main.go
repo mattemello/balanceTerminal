@@ -2,26 +2,23 @@ package main
 
 import (
 	"github.com/gdamore/tcell/v2"
-	"github.com/rivo/tview"
+	"github.com/mattemello/balanceTerminal/ui"
 )
 
 func main() {
-	app := tview.NewApplication()
+
+	app := ui.AppCreation()
+	pages := ui.PageCreation()
 
 	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		if event.Rune() == 113 {
 			app.Stop()
+		} else if event.Rune() == 97 {
+			pages.SwitchToPage("Insert")
 		}
 
 		return event
 	})
-
-	pages := tview.NewPages()
-
-	textA := tview.NewTextView().SetText("(q) for quit") //.SetBackgroundColor(tcell.ColorBlack)
-
-	pages.AddPage("Menu", textA, true, true)
-
 	if err := app.SetRoot(pages, true).Run(); err != nil {
 		panic(err)
 	}
