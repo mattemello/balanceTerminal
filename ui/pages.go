@@ -18,9 +18,13 @@ func PageCreation() *tview.Pages {
 	textA.SetBackgroundColor(tcell.ColorBlack)
 
 	pages.AddPage("Menu", menuCreation(), true, true)
-	pages.AddPage("Insert", flexCreation().AddItem(tview.NewBox().SetBorder(true), 0, 1, false).AddItem(tview.NewBox().SetBorder(true), 0, 1, false).AddItem(tview.NewBox().SetBorder(true), 0, 1, false), true, false)
+	pages.AddPage("Insert", , true, false)
 
 	return pages
+}
+
+func insertCreation() *tview. {
+	flexCreation().AddItem(tview.NewBox().SetBorder(true), 0, 1, false).AddItem(tview.NewBox().SetBorder(true), 0, 1, false).AddItem(tview.NewBox().SetBorder(true), 0, 1, false)
 }
 
 func menuCreation() *tview.Flex {
