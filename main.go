@@ -12,18 +12,6 @@ func main() {
 
 	_ = sqlScript.CreationTable()
 
-	/*_, err = db.Exec("INSERT INTO spendingMoney VALUES(0, 0.5, 'real', 05/12/2021);")
-	if err != nil {
-		log.Fatal("29 Error with the database: ", err)
-		return
-	}
-
-	_, err = db.Exec("DELETE FROM spendingMoney WHERE id_transition=0;")
-	if err != nil {
-		log.Fatal("Error with the database: ", err)
-		return
-	}*/
-
 	app := ui.AppCreation()
 	pages := ui.PageCreation()
 	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
