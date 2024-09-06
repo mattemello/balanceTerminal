@@ -17,7 +17,8 @@ func main() {
 	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		if event.Rune() == 113 {
 			app.Stop()
-		} else if event.Rune() == 97 {
+		}
+		if event.Rune() == 97 {
 			pages.SwitchToPage("Insert")
 		}
 

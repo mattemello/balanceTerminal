@@ -1,6 +1,8 @@
 package ui
 
 import (
+	"unicode"
+
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 )
@@ -18,13 +20,29 @@ func PageCreation() *tview.Pages {
 	textA.SetBackgroundColor(tcell.ColorBlack)
 
 	pages.AddPage("Menu", menuCreation(), true, true)
-	pages.AddPage("Insert", , true, false)
+	pages.AddPage("Insert", insertCreation(), true, false)
 
 	return pages
 }
 
-func insertCreation() *tview. {
-	flexCreation().AddItem(tview.NewBox().SetBorder(true), 0, 1, false).AddItem(tview.NewBox().SetBorder(true), 0, 1, false).AddItem(tview.NewBox().SetBorder(true), 0, 1, false)
+func insertCreation() *tview.Flex {
+	flex := flexCreation()
+	form := tview.NewForm()
+
+	form.AddTextView("Insert the money used: \n", "", 0, 1, false, false).SetBorder(true)
+	form.AddTextArea("money", "00.00", 0, 1, 1, func(text string) {
+		for _, c := range text {
+			if unicode.IsDigit(c) {
+				//do here
+			}
+		}
+	})
+
+	flex.AddItem(form, 0, 8, false)
+	flex.AddItem(footSet(), 0, 1, false)
+
+	return flex
+
 }
 
 func menuCreation() *tview.Flex {
