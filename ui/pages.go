@@ -1,7 +1,9 @@
 package ui
 
 import (
+	"fmt"
 	"strconv"
+	"strings"
 	"unicode"
 
 	"github.com/gdamore/tcell/v2"
@@ -47,37 +49,46 @@ func insertCreation() *tview.Form {
 		errorhand.HandlerError(err)
 		move.Money = float32(m)
 	})
-	form.AddInputField("date", "", 4, func(textToCheck string, lastChar rune) bool {
-		if unicode.IsDigit(lastChar) {
-			if n, _ := strconv.ParseInt(textToCheck, 10, 64); n < 31 && n > 0 {
-				return true
+	form.AddInputField("date (format: dd/mm/yyyy) ", "", 4, func(textToCheck string, lastChar rune) bool {
+		if !unicode.IsDigit(lastChar) && lastChar != '/' {
+			return false
+		}
+
+		if lastChar == '/' {
+			dat := strings.Split(textToCheck, "/")
+
+			if len(dat) > 3 {
+				return false
+			}
+
+			if len(dat) == 1 {
+				m, _ := strconv.ParseInt(dat[0], 10, 64)
+
+				if m < 0 || m > 31 {
+					return false
+				}
+			}
+
+			if len(dat) == 2 {
+				m, _ := strconv.ParseInt(dat[1], 10, 64)
+
+				if m < 0 || m > 12 {
+					return false
+				}
+			}
+
+			if len(dat) == 3 {
+				//m, _ := strconv.ParseInt(dat[0], 10, 64)
+				// to do the year
 
 			}
 		}
 
-		return false
+		return true
 
 	}, func(text string) {
-		m, err := strconv.ParseInt(text, 10, 64)
-		errorhand.HandlerError(err)
-		move.Day = int(m)
+		move.Date = text
 	})
-	form.AddInputField("month", "", 4, func(textToCheck string, lastChar rune) bool {
-		if unicode.IsDigit(lastChar) {
-			if n, _ := strconv.ParseInt(textToCheck, 10, 64); n < 13 && n > 0 {
-				return true
-
-			}
-		}
-
-		return false
-
-	}, func(text string) {
-		m, err := strconv.ParseInt(text, 10, 64)
-		errorhand.HandlerError(err)
-		move.Month = int(m)
-	})
-
 	var prova = []string{"ciao", "due"}
 
 	form.AddDropDown("money", prova, 0, func(option string, optionIndex int) {
