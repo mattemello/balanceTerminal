@@ -18,7 +18,7 @@ func main() {
 		if event.Rune() == 113 {
 			app.Stop()
 		}
-		if event.Rune() == 97 {
+		if event.Rune() == 110 {
 			pages.SwitchToPage("Insert")
 		}
 

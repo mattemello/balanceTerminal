@@ -1,9 +1,12 @@
 package ui
 
 import (
+	"strconv"
 	"unicode"
 
 	"github.com/gdamore/tcell/v2"
+	errorhand "github.com/mattemello/balanceTerminal/errorHand"
+	"github.com/mattemello/balanceTerminal/sqlScript"
 	"github.com/rivo/tview"
 )
 
@@ -25,23 +28,66 @@ func PageCreation() *tview.Pages {
 	return pages
 }
 
-func insertCreation() *tview.Flex {
-	flex := flexCreation()
+func insertCreation() *tview.Form {
+	//flex := flexCreation()
 	form := tview.NewForm()
 
+	var move sqlScript.Movement
+
 	form.AddTextView("Insert the money used: \n", "", 0, 1, false, false).SetBorder(true)
-	form.AddTextArea("money", "00.00", 0, 1, 1, func(text string) {
-		for _, c := range text {
-			if unicode.IsDigit(c) {
-				//do here
+	form.AddInputField("money", "", 20, func(textToCheck string, lastChar rune) bool {
+		if unicode.IsDigit(lastChar) || lastChar == '.' {
+			return true
+		}
+
+		return false
+
+	}, func(text string) {
+		m, err := strconv.ParseFloat(text, 32)
+		errorhand.HandlerError(err)
+		move.Money = float32(m)
+	})
+	form.AddInputField("date", "", 4, func(textToCheck string, lastChar rune) bool {
+		if unicode.IsDigit(lastChar) {
+			if n, _ := strconv.ParseInt(textToCheck, 10, 64); n < 31 && n > 0 {
+				return true
+
 			}
 		}
+
+		return false
+
+	}, func(text string) {
+		m, err := strconv.ParseInt(text, 10, 64)
+		errorhand.HandlerError(err)
+		move.Day = int(m)
+	})
+	form.AddInputField("month", "", 4, func(textToCheck string, lastChar rune) bool {
+		if unicode.IsDigit(lastChar) {
+			if n, _ := strconv.ParseInt(textToCheck, 10, 64); n < 13 && n > 0 {
+				return true
+
+			}
+		}
+
+		return false
+
+	}, func(text string) {
+		m, err := strconv.ParseInt(text, 10, 64)
+		errorhand.HandlerError(err)
+		move.Month = int(m)
 	})
 
-	flex.AddItem(form, 0, 8, false)
-	flex.AddItem(footSet(), 0, 1, false)
+	var prova = []string{"ciao", "due"}
 
-	return flex
+	form.AddDropDown("money", prova, 0, func(option string, optionIndex int) {
+		move.Tags = option
+	})
+
+	//flex.AddItem(form, 0, 8, false)
+	//flex.AddItem(footSet(), 0, 1, false)
+
+	return form
 
 }
 
