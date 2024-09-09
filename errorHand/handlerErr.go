@@ -11,3 +11,11 @@ func HandlerError(err error) {
 		os.Exit(1)
 	}
 }
+
+func Controll(s []string) {
+	log.Fatalln("dimension: ", len(s))
+	for i, c := range s {
+		log.Fatal(i, " --- Value: ", c)
+	}
+	os.Exit(1)
+}

@@ -1,7 +1,6 @@
 package ui
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 	"unicode"
@@ -24,7 +23,7 @@ func PageCreation() *tview.Pages {
 	textA := tview.NewTextView().SetText("(q) for quit").SetTextColor(tcell.ColorSnow)
 	textA.SetBackgroundColor(tcell.ColorBlack)
 
-	pages.AddPage("Menu", menuCreation(), true, true)
+	pages.AddPage("Main", menuCreation(), true, true)
 	pages.AddPage("Insert", insertCreation(), true, false)
 
 	return pages
@@ -33,6 +32,11 @@ func PageCreation() *tview.Pages {
 func insertCreation() *tview.Form {
 	//flex := flexCreation()
 	form := tview.NewForm()
+
+	form.SetFieldBackgroundColor(tcell.Color(tcell.ColorValues[12]))
+	form.SetFieldTextColor(tcell.ColorSnow)
+	form.SetLabelColor(tcell.ColorWhiteSmoke)
+	form.SetButtonBackgroundColor(tcell.Color(tcell.ColorValues[12]))
 
 	var move sqlScript.Movement
 
@@ -45,46 +49,50 @@ func insertCreation() *tview.Form {
 		return false
 
 	}, func(text string) {
-		m, err := strconv.ParseFloat(text, 32)
-		errorhand.HandlerError(err)
-		move.Money = float32(m)
+		if text != "" {
+			m, err := strconv.ParseFloat(text, 32)
+			errorhand.HandlerError(err)
+			move.Money = float32(m)
+		}
 	})
-	form.AddInputField("date (format: dd/mm/yyyy) ", "", 4, func(textToCheck string, lastChar rune) bool {
-		if !unicode.IsDigit(lastChar) && lastChar != '/' {
-			return false
+	form.AddInputField("date (format: dd/mm/yyyy) ", "", 20, func(textToCheck string, lastChar rune) bool {
+		if unicode.IsDigit(lastChar) {
+			return true
 		}
 
+		ForControll(int(0))
 		if lastChar == '/' {
 			dat := strings.Split(textToCheck, "/")
 
 			if len(dat) > 3 {
 				return false
 			}
-
-			if len(dat) == 1 {
-				m, _ := strconv.ParseInt(dat[0], 10, 64)
-
-				if m < 0 || m > 31 {
-					return false
-				}
-			}
+			//errorhand.Controll(dat)
 
 			if len(dat) == 2 {
-				m, _ := strconv.ParseInt(dat[1], 10, 64)
+				m, _ := strconv.ParseInt(dat[0], 10, 64)
 
-				if m < 0 || m > 12 {
-					return false
+				if int(m) > 0 && int(m) < 32 {
+					return true
 				}
 			}
 
 			if len(dat) == 3 {
+				m, _ := strconv.ParseInt(dat[1], 10, 64)
+
+				if m > 0 && m < 13 {
+					return true
+				}
+			}
+
+			if len(dat) == 4 {
 				//m, _ := strconv.ParseInt(dat[0], 10, 64)
 				// to do the year
 
 			}
 		}
 
-		return true
+		return false
 
 	}, func(text string) {
 		move.Date = text
@@ -95,11 +103,24 @@ func insertCreation() *tview.Form {
 		move.Tags = option
 	})
 
+	form.AddButton("save", func() {
+		//chiamare funzione salvataggio
+		//think how to cange page in to "Main"
+	})
+
 	//flex.AddItem(form, 0, 8, false)
 	//flex.AddItem(footSet(), 0, 1, false)
 
 	return form
 
+}
+
+func ForControll(i int) *tview.TextView {
+	text := tview.NewTextView()
+
+	text.SetText(string(i))
+
+	return text
 }
 
 func menuCreation() *tview.Flex {
