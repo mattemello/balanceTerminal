@@ -8,13 +8,8 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-var pages = ui.PageCreation()
-
-func SwitchPage(s string) {
-	pages.SwitchToPage(s)
-}
-
 func main() {
+	var pages = ui.PageCreation()
 
 	_ = sqlScript.CreationTable()
 
@@ -24,8 +19,9 @@ func main() {
 			app.Stop()
 		}
 		if event.Rune() == 110 {
-			SwitchPage("Insert")
+			pages.SwitchToPage("Insert")
 		}
+		errorhand.Controll(event.Rune())
 
 		return event
 	})

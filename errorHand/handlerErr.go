@@ -12,10 +12,7 @@ func HandlerError(err error) {
 	}
 }
 
-func Controll(s []string) {
-	log.Fatalln("dimension: ", len(s))
-	for i, c := range s {
-		log.Fatal(i, " --- Value: ", c)
-	}
+func Controll(s rune) {
+	log.Fatalln("item id (dropdown): ", s)
 	os.Exit(1)
 }

@@ -100,15 +100,16 @@ func insertCreation() *tview.Form {
 	})
 	var prova = []string{"ciao", "due"}
 
-	form.AddDropDown("money", prova, 0, func(option string, optionIndex int) {
+	form.AddDropDown("tags", prova, 0, func(option string, optionIndex int) {
 		move.Tags = option
 	})
 
 	form.AddButton("save", func() {
 		//chiamare funzione salvataggio
-		//think how to cange page in to "Main"
 		pages.SwitchToPage("Main")
 	})
+
+	form.
 
 	//flex.AddItem(form, 0, 8, false)
 	//flex.AddItem(footSet(), 0, 1, false)
