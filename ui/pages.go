@@ -11,6 +11,8 @@ import (
 	"github.com/rivo/tview"
 )
 
+var pages = tview.NewPages()
+
 func AppCreation() *tview.Application {
 
 	app := tview.NewApplication()
@@ -19,7 +21,6 @@ func AppCreation() *tview.Application {
 
 func PageCreation() *tview.Pages {
 
-	pages := tview.NewPages()
 	textA := tview.NewTextView().SetText("(q) for quit").SetTextColor(tcell.ColorSnow)
 	textA.SetBackgroundColor(tcell.ColorBlack)
 
@@ -106,6 +107,7 @@ func insertCreation() *tview.Form {
 	form.AddButton("save", func() {
 		//chiamare funzione salvataggio
 		//think how to cange page in to "Main"
+		pages.SwitchToPage("Main")
 	})
 
 	//flex.AddItem(form, 0, 8, false)
