@@ -30,9 +30,19 @@ func PageCreation() *tview.Pages {
 	return pages
 }
 
+func SwitchFocus(val int) {
+	id, bid := form.GetFocusedItemIndex()
+
+	if bid != -1 {
+		form.SetFocus(form.GetFormItemCount() - 2)
+	}
+
+	form.SetFocus(id + val)
+}
+
+var form = tview.NewForm()
+
 func insertCreation() *tview.Form {
-	//flex := flexCreation()
-	form := tview.NewForm()
 
 	form.SetFieldBackgroundColor(tcell.Color(tcell.ColorValues[12]))
 	form.SetFieldTextColor(tcell.ColorSnow)
@@ -61,14 +71,12 @@ func insertCreation() *tview.Form {
 			return true
 		}
 
-		ForControll(int(0))
 		if lastChar == '/' {
 			dat := strings.Split(textToCheck, "/")
 
 			if len(dat) > 3 {
 				return false
 			}
-			//errorhand.Controll(dat)
 
 			if len(dat) == 2 {
 				m, _ := strconv.ParseInt(dat[0], 10, 64)
@@ -109,21 +117,8 @@ func insertCreation() *tview.Form {
 		pages.SwitchToPage("Main")
 	})
 
-	form.
-
-	//flex.AddItem(form, 0, 8, false)
-	//flex.AddItem(footSet(), 0, 1, false)
-
 	return form
 
-}
-
-func ForControll(i int) *tview.TextView {
-	text := tview.NewTextView()
-
-	text.SetText(string(i))
-
-	return text
 }
 
 func menuCreation() *tview.Flex {
@@ -139,7 +134,7 @@ func menuCreation() *tview.Flex {
 
 func footSet() *tview.Flex {
 
-	text := tview.NewTextView().SetText("(n) new pay \t (d) delet").SetTextColor(tcell.ColorSnow)
+	text := tview.NewTextView().SetText("(n) new pay \t (d) delet \n (" + string(tcell.RuneRArrow) + ") change box forward (in input) \t (" + string(tcell.RuneLArrow) + ") change box backwards (in input)").SetTextColor(tcell.ColorSnow)
 	text.SetTextAlign(tview.AlignBottom)
 	text.SetTextAlign(tview.AlignCenter)
 

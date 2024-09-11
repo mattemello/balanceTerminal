@@ -12,7 +12,7 @@ func HandlerError(err error) {
 	}
 }
 
-func Controll(s rune) {
+func Controll(s int) {
 	log.Fatalln("item id (dropdown): ", s)
 	os.Exit(1)
 }
