@@ -2,6 +2,7 @@ package sqlScript
 
 import (
 	"database/sql"
+	"strconv"
 	//"time"
 
 	"github.com/mattemello/balanceTerminal/errorHand"
@@ -23,8 +24,11 @@ return
 
 }*/
 
+var db *sql.DB
+
 func CreationTable() *sql.DB {
-	db, err := sql.Open("sqlite3", "money.db")
+	var err error
+	db, err = sql.Open("sqlite3", "money.db")
 	errorhand.HandlerError(err)
 
 	queryCre := "CREATE TABLE IF NOT EXISTS spendingMoney( id_transition INTEGER PRIMARY KEY, valur_tansaction REAL, tags TEXT, date DATE )"
@@ -33,4 +37,12 @@ func CreationTable() *sql.DB {
 	errorhand.HandlerError(err)
 
 	return db
+}
+
+func SaveValue(mon Movement) error {
+
+	_, err := db.Exec("INSERT INTO spendingMoney VALUES(0, " + strconv.FormatFloat(float64(mon.Money), 'E', 2, 32) + ", '" + mon.Tags + "', " + mon.Date + ");")
+
+	return err
+
 }

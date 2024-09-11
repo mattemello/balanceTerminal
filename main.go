@@ -8,10 +8,10 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+var Db = sqlScript.CreationTable()
+
 func main() {
 	var pages = ui.PageCreation()
-
-	_ = sqlScript.CreationTable()
 
 	app := ui.AppCreation()
 	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {

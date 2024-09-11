@@ -113,8 +113,12 @@ func insertCreation() *tview.Form {
 	})
 
 	form.AddButton("save", func() {
-		//chiamare funzione salvataggio
-		pages.SwitchToPage("Main")
+		err := sqlScript.SaveValue(move)
+		if err != nil {
+			errorhand.HandlerError(err)
+		} else {
+			pages.SwitchToPage("Main")
+		}
 	})
 
 	return form

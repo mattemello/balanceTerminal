@@ -1,8 +1,10 @@
 # TO-DO list
 [x] decide the language
-[ ] organaize the progect
-[ ] things i want it to do
+[x] organaize the progect
+[x] things i want it to do
 [x] decide the database
+[ ] save the date
+[ ] controll the data
 
 
 the make file will be do the sql database
