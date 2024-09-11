@@ -31,7 +31,7 @@ func CreationTable() *sql.DB {
 	db, err = sql.Open("sqlite3", "money.db")
 	errorhand.HandlerError(err)
 
-	queryCre := "CREATE TABLE IF NOT EXISTS spendingMoney( id_transition INTEGER PRIMARY KEY, valur_tansaction REAL, tags TEXT, date DATE )"
+	queryCre := "CREATE TABLE IF NOT EXISTS spendingMoney( id_transition INTEGER PRIMARY KEY, valur_tansaction REAL, tags TEXT, date DATETIME )"
 
 	_, err = db.Exec(queryCre)
 	errorhand.HandlerError(err)
@@ -41,7 +41,7 @@ func CreationTable() *sql.DB {
 
 func SaveValue(mon Movement) error {
 
-	_, err := db.Exec("INSERT INTO spendingMoney VALUES(0, " + strconv.FormatFloat(float64(mon.Money), 'E', 2, 32) + ", '" + mon.Tags + "', " + mon.Date + ");")
+	_, err := db.Exec("INSERT INTO spendingMoney VALUES(1, " + strconv.FormatFloat(float64(mon.Money), 'E', 2, 32) + ", '" + mon.Tags + "', " + mon.Date + ");")
 
 	return err
 

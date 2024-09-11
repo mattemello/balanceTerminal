@@ -66,19 +66,19 @@ func insertCreation() *tview.Form {
 			move.Money = float32(m)
 		}
 	})
-	form.AddInputField("date (format: dd/mm/yyyy) ", "", 20, func(textToCheck string, lastChar rune) bool {
+	form.AddInputField("date (format: dd-mm-yyyy) ", "", 20, func(textToCheck string, lastChar rune) bool {
 		if unicode.IsDigit(lastChar) {
 			return true
 		}
 
-		if lastChar == '/' {
-			dat := strings.Split(textToCheck, "/")
+		if lastChar == '-' {
+			dat := strings.Split(textToCheck, "-")
 
 			if len(dat) > 3 {
 				return false
 			}
 
-			if len(dat) == 2 {
+			/*if len(dat) == 4 {
 				m, _ := strconv.ParseInt(dat[0], 10, 64)
 
 				if int(m) > 0 && int(m) < 32 {
@@ -98,10 +98,10 @@ func insertCreation() *tview.Form {
 				//m, _ := strconv.ParseInt(dat[0], 10, 64)
 				// to do the year
 
-			}
+			}*/
 		}
 
-		return false
+		return true
 
 	}, func(text string) {
 		move.Date = text
