@@ -1,9 +1,11 @@
 package sqlScript
 
+import "time"
+
 type Movement struct {
 	Money float32
 	Tags  string
-	Date  string
+	Date  time.Time
 }
 
 /*func (move Movement) addMoney(num float32) {

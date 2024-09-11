@@ -3,6 +3,7 @@ package ui
 import (
 	"strconv"
 	"strings"
+	"time"
 	"unicode"
 
 	"github.com/gdamore/tcell/v2"
@@ -104,7 +105,9 @@ func insertCreation() *tview.Form {
 		return true
 
 	}, func(text string) {
-		move.Date = text
+		var err error
+		move.Date, err = time.Parse(time.RFC822, text)
+		errorhand.HandlerError(err)
 	})
 	var prova = []string{"ciao", "due"}
 
