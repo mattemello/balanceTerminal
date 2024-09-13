@@ -105,9 +105,11 @@ func insertCreation() *tview.Form {
 		return true
 
 	}, func(text string) {
-		var err error
-		move.Date, err = time.Parse(time.RFC822, text)
-		errorhand.HandlerError(err)
+		if len(text) > 9 {
+			var err error
+			move.Date, err = time.Parse("02/01/2006", text)
+			errorhand.HandlerError(err)
+		}
 	})
 	var prova = []string{"ciao", "due"}
 
@@ -118,7 +120,7 @@ func insertCreation() *tview.Form {
 	form.AddButton("save", func() {
 		err := sqlScript.SaveValue(move)
 		if err != nil {
-			errorhand.HandlerError(err)
+			errorhand.BadSaving(err)
 		} else {
 			pages.SwitchToPage("Main")
 		}
@@ -137,6 +139,10 @@ func menuCreation() *tview.Flex {
 	flex.AddItem(footSet(), 0, 1, false)
 
 	return flex
+}
+
+func addMoneyUi(mon sqlScript.Movement) {
+
 }
 
 func footSet() *tview.Flex {

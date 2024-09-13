@@ -12,7 +12,14 @@ func HandlerError(err error) {
 	}
 }
 
-func Controll(s int) {
+func BadSaving(err error) {
+	if err != nil {
+		log.Fatal("Error in the sqlite: ", err)
+		os.Exit(1)
+	}
+}
+
+func Controll(s string) {
 	log.Fatalln("item id (dropdown): ", s)
 	os.Exit(1)
 }

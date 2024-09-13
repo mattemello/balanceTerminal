@@ -3,7 +3,6 @@ package sqlScript
 import (
 	"database/sql"
 	"strconv"
-	//"time"
 
 	"github.com/mattemello/balanceTerminal/errorHand"
 )
@@ -41,7 +40,9 @@ func CreationTable() *sql.DB {
 
 func SaveValue(mon Movement) error {
 
-	_, err := db.Exec("INSERT INTO spendingMoney VALUES(1, " + strconv.FormatFloat(float64(mon.Money), 'E', 2, 32) + ", '" + mon.Tags + "', " + mon.Date + ");")
+	//errorhand.Controll("INSERT INTO spendingMoney VALUES(1, " + strconv.FormatFloat(float64(mon.Money), 'f', 2, 32) + ", '" + mon.Tags + "', " + mon.Date.String() + ");")
+
+	_, err := db.Exec("INSERT INTO spendingMoney VALUES(1, " + strconv.FormatFloat(float64(mon.Money), 'f', 2, 32) + ", '" + mon.Tags + "', '" + mon.Date.String() + "');")
 
 	return err
 
