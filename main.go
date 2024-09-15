@@ -11,8 +11,10 @@ import (
 var Db = sqlScript.CreationTable()
 
 func main() {
-	var pages = ui.PageCreation()
 
+	sqlScript.TakeValue()
+
+	var pages = ui.PageCreation()
 	app := ui.AppCreation()
 	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		if event.Rune() == 113 {

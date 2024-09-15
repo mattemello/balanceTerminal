@@ -13,6 +13,7 @@ import (
 )
 
 var pages = tview.NewPages()
+var form = tview.NewForm()
 
 func AppCreation() *tview.Application {
 
@@ -41,8 +42,6 @@ func SwitchFocus(val int) {
 	form.SetFocus(id + val)
 }
 
-var form = tview.NewForm()
-
 func insertCreation() *tview.Form {
 
 	form.SetFieldBackgroundColor(tcell.Color(tcell.ColorValues[12]))
@@ -67,7 +66,7 @@ func insertCreation() *tview.Form {
 			move.Money = float32(m)
 		}
 	})
-	form.AddInputField("date (format: dd-mm-yyyy) ", "", 20, func(textToCheck string, lastChar rune) bool {
+	form.AddInputField("date (format: dd/mm/yyyy) ", "", 20, func(textToCheck string, lastChar rune) bool {
 		if unicode.IsDigit(lastChar) {
 			return true
 		}
@@ -79,7 +78,7 @@ func insertCreation() *tview.Form {
 				return false
 			}
 
-			/*if len(dat) == 4 {
+			if len(dat) == 2 {
 				m, _ := strconv.ParseInt(dat[0], 10, 64)
 
 				if int(m) > 0 && int(m) < 32 {
@@ -95,11 +94,11 @@ func insertCreation() *tview.Form {
 				}
 			}
 
-			if len(dat) == 4 {
-				//m, _ := strconv.ParseInt(dat[0], 10, 64)
-				// to do the year
+			//if len(dat) == 4 {
+			//m, _ := strconv.ParseInt(dat[0], 10, 64)
+			// to do the year
 
-			}*/
+			//}
 		}
 
 		return true
@@ -122,7 +121,9 @@ func insertCreation() *tview.Form {
 		if err != nil {
 			errorhand.BadSaving(err)
 		} else {
-			pages.SwitchToPage("Main")
+			sqlScript.SaveMove(move)
+			pages.RemovePage("menu")
+			pages.AddAndSwitchToPage("Main", menuCreation(), true)
 		}
 	})
 
@@ -134,15 +135,54 @@ func menuCreation() *tview.Flex {
 	flex := flexCreation()
 
 	flex.AddItem(tview.NewBox().SetBorder(true), 0, 2, false)
-	flex.AddItem(tview.NewBox().SetBorder(true), 0, 7, false)
+	flex.AddItem(addMoneyUi(), 0, 7, false)
 
 	flex.AddItem(footSet(), 0, 1, false)
 
 	return flex
 }
 
-func addMoneyUi(mon sqlScript.Movement) {
+func addMoneyUi() *tview.Flex {
 
+	flex := flexCreation()
+
+	flex.SetBorder(true)
+
+	max := 5
+
+	if len(sqlScript.Movements) < 5 {
+		max = len(sqlScript.Movements)
+	}
+
+	//errorhand.Controll(max)
+
+	for i := max; i > 0; i-- {
+		flex.AddItem(writeMoney(sqlScript.Movements[i-1].Mov), 0, 1, false)
+	}
+
+	for i := 5 - len(sqlScript.Movements); i > 0; i-- {
+		flex.AddItem(tview.NewBox().SetBorder(true), 0, 1, false)
+	}
+
+	return flex
+}
+
+func writeMoney(mon sqlScript.Movement) *tview.TextView {
+
+	t := tview.NewTextView()
+
+	t.SetBorder(true)
+
+	t.SetText(strconv.FormatFloat(float64(mon.Money), 'f', 2, 32) + "\t \t \t \t \t \t \t \t \t \t \t \t " + mon.Date.Format("02/01/2006") + " \t \t \t \t \t \t \t \t \t \t \t \t " + mon.Tags)
+
+	t.SetDrawFunc(func(screen tcell.Screen, x, y, w, h int) (int, int, int, int) {
+		y += h / 2
+		return x, y, w, h
+	})
+
+	t.SetTextAlign(tview.AlignCenter)
+
+	return t
 }
 
 func footSet() *tview.Flex {

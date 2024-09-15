@@ -8,6 +8,23 @@ type Movement struct {
 	Date  time.Time
 }
 
+type MovementRow struct {
+	Id  int
+	Mov Movement
+}
+
+var Movements []MovementRow
+
+func SaveMove(move Movement) {
+
+	var mov MovementRow
+
+	mov.Id = len(Movements) + 1
+	mov.Mov = move
+
+	Movements = append(Movements, mov)
+}
+
 /*func (move Movement) addMoney(num float32) {
 	move.money = num
 }

@@ -19,7 +19,7 @@ func BadSaving(err error) {
 	}
 }
 
-func Controll(s string) {
+func Controll(s int) {
 	log.Fatalln("item id (dropdown): ", s)
 	os.Exit(1)
 }

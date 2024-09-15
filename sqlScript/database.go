@@ -1,6 +1,7 @@
 package sqlScript
 
 import (
+	"context"
 	"database/sql"
 	"strconv"
 
@@ -40,10 +41,28 @@ func CreationTable() *sql.DB {
 
 func SaveValue(mon Movement) error {
 
-	//errorhand.Controll("INSERT INTO spendingMoney VALUES(1, " + strconv.FormatFloat(float64(mon.Money), 'f', 2, 32) + ", '" + mon.Tags + "', " + mon.Date.String() + ");")
+	//errorhand.Controll("INSERT INTO spendingMoney VALUES(" + strconv.Itoa(id) + ", " + strconv.FormatFloat(float64(mon.Money), 'f', 2, 32) + ", '" + mon.Tags + "', " + mon.Date.String() + ");")
 
-	_, err := db.Exec("INSERT INTO spendingMoney VALUES(1, " + strconv.FormatFloat(float64(mon.Money), 'f', 2, 32) + ", '" + mon.Tags + "', '" + mon.Date.String() + "');")
+	_, err := db.Exec("INSERT INTO spendingMoney VALUES(" + strconv.Itoa(len(Movements)+1) + ", " + strconv.FormatFloat(float64(mon.Money), 'f', 2, 32) + ", '" + mon.Tags + "', '" + mon.Date.String() + "');")
 
 	return err
+
+}
+
+func TakeValue() {
+
+	rows, err := db.QueryContext(context.Background(), "SELECT * FROM spendingMoney;")
+	errorhand.HandlerError(err)
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var mov MovementRow
+
+		err := rows.Scan(&mov.Id, &mov.Mov.Money, &mov.Mov.Tags, &mov.Mov.Date)
+		errorhand.HandlerError(err)
+
+		Movements = append(Movements, mov)
+	}
 
 }
