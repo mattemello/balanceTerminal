@@ -3,13 +3,21 @@ package errorhand
 import (
 	"log"
 	"os"
+	"runtime"
+	"strconv"
 )
 
-func HandlerError(err error) {
+func HandlerError(err error, txt string) {
 	if err != nil {
-		log.Fatal("Error: ", err)
+		log.Fatal("Error: ", err, " -> ", txt)
 		os.Exit(1)
 	}
+}
+
+func TakeFileLine() string {
+	_, file, line, _ := runtime.Caller(1)
+
+	return (file + " " + strconv.Itoa(line))
 }
 
 func BadSaving(err error) {

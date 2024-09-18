@@ -29,17 +29,22 @@ var db *sql.DB
 func CreationTable() *sql.DB {
 	var err error
 	db, err = sql.Open("sqlite3", "money.db")
-	errorhand.HandlerError(err)
+	errorhand.HandlerError(err, errorhand.TakeFileLine()+"error in the opening of the db")
 
-	queryCre := "CREATE TABLE IF NOT EXISTS spendingMoney( id_transition INTEGER PRIMARY KEY, valur_tansaction REAL, tags TEXT, date DATETIME )"
+	queryCreationSpending := "CREATE TABLE IF NOT EXISTS spendingMoney( id_transition INTEGER PRIMARY KEY, valur_tansaction REAL, tags TEXT, date DATETIME )"
 
-	_, err = db.Exec(queryCre)
-	errorhand.HandlerError(err)
+	_, err = db.Exec(queryCreationSpending)
+	errorhand.HandlerError(err, errorhand.TakeFileLine()+" problem with the query")
+
+	queryCreationMoney := "CREATE TABLE IF NOT EXISTS money( idMoney INTEGER PRIMARY KEY, quantityMoney REAL, lastUpdate DATE)"
+
+	_, err = db.Exec(queryCreationMoney)
+	errorhand.HandlerError(err, errorhand.TakeFileLine()+" problem with the query")
 
 	return db
 }
 
-func SaveValue(mon Movement) error {
+func SaveTransaction(mon Movement) error {
 
 	//errorhand.Controll("INSERT INTO spendingMoney VALUES(" + strconv.Itoa(id) + ", " + strconv.FormatFloat(float64(mon.Money), 'f', 2, 32) + ", '" + mon.Tags + "', " + mon.Date.String() + ");")
 
@@ -49,10 +54,16 @@ func SaveValue(mon Movement) error {
 
 }
 
+func QuantityMoney() float32 {
+	var val float32
+
+	return val
+}
+
 func TakeValue() {
 
 	rows, err := db.QueryContext(context.Background(), "SELECT * FROM spendingMoney;")
-	errorhand.HandlerError(err)
+	errorhand.HandlerError(err, errorhand.TakeFileLine()+" error in the selection of the row")
 
 	defer rows.Close()
 
@@ -60,7 +71,7 @@ func TakeValue() {
 		var mov MovementRow
 
 		err := rows.Scan(&mov.Id, &mov.Mov.Money, &mov.Mov.Tags, &mov.Mov.Date)
-		errorhand.HandlerError(err)
+		errorhand.HandlerError(err, errorhand.TakeFileLine()+" error in the scan of the rows")
 
 		Movements = append(Movements, mov)
 	}

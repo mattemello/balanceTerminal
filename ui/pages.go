@@ -28,8 +28,27 @@ func PageCreation() *tview.Pages {
 
 	pages.AddPage("Main", menuCreation(), true, true)
 	pages.AddPage("Insert", insertCreation(), true, false)
+	pages.AddPage("Add", addMoney(), true, false)
 
 	return pages
+}
+
+func addMoney() *tview.Form {
+
+	form := tview.NewForm()
+
+	form.SetFieldBackgroundColor(tcell.Color(tcell.ColorValues[12]))
+	form.SetFieldTextColor(tcell.ColorSnow)
+	form.SetLabelColor(tcell.ColorWhiteSmoke)
+	form.SetButtonBackgroundColor(tcell.Color(tcell.ColorValues[12]))
+
+	form.AddInputField("Insert money to add: ", "", 20, func(textToCheck string, lastChar rune) bool { return false }, func(text string) {})
+
+	form.AddButton("Save money", func() {
+		//TO-DO: save the money in the db
+	})
+
+	return form
 }
 
 func SwitchFocus(val int) {
@@ -62,7 +81,7 @@ func insertCreation() *tview.Form {
 	}, func(text string) {
 		if text != "" {
 			m, err := strconv.ParseFloat(text, 32)
-			errorhand.HandlerError(err)
+			errorhand.HandlerError(err, errorhand.TakeFileLine()+"  error with the parseFloat")
 			move.Money = float32(m)
 		}
 	})
@@ -107,7 +126,7 @@ func insertCreation() *tview.Form {
 		if len(text) > 9 {
 			var err error
 			move.Date, err = time.Parse("02/01/2006", text)
-			errorhand.HandlerError(err)
+			errorhand.HandlerError(err, errorhand.TakeFileLine()+" error in the parse of the date")
 		}
 	})
 	var prova = []string{"ciao", "due"}
@@ -117,7 +136,7 @@ func insertCreation() *tview.Form {
 	})
 
 	form.AddButton("save", func() {
-		err := sqlScript.SaveValue(move)
+		err := sqlScript.SaveTransaction(move)
 		if err != nil {
 			errorhand.BadSaving(err)
 		} else {
@@ -134,7 +153,7 @@ func insertCreation() *tview.Form {
 func menuCreation() *tview.Flex {
 	flex := flexCreation()
 
-	flex.AddItem(tview.NewBox().SetBorder(true), 0, 2, false)
+	flex.AddItem(topBar(), 0, 2, false)
 	flex.AddItem(addMoneyUi(), 0, 7, false)
 
 	flex.AddItem(footSet(), 0, 1, false)
@@ -142,19 +161,59 @@ func menuCreation() *tview.Flex {
 	return flex
 }
 
+func topBar() *tview.Flex {
+	flex := flexCreation()
+
+	//flex.AddItem()
+
+	/*
+		money    |    spesi  	| 	a graphics?
+
+	*/
+
+	flex.SetDirection(tview.FlexColumn)
+
+	flex.AddItem(money(), 0, 1, false)
+	flex.AddItem(minusMoney(), 0, 1, false)
+	flex.AddItem(minusMoney(), 0, 1, false)
+
+	return flex
+}
+
+func money() *tview.TextView {
+	t := tview.NewTextView()
+
+	return t
+}
+
+func minusMoney() *tview.TextView {
+
+	t := tview.NewTextView()
+
+	var m float32
+
+	for _, tot := range sqlScript.Movements {
+		m = m + tot.Mov.Money
+	}
+
+	t.SetBorder(true)
+	t.SetTitle("expenses")
+	t.SetText(strconv.FormatFloat(float64(m), 'f', 2, 32))
+	t.SetTextAlign(tview.AlignCenter)
+
+	return t
+
+}
+
 func addMoneyUi() *tview.Flex {
 
 	flex := flexCreation()
-
-	flex.SetBorder(true)
 
 	max := 5
 
 	if len(sqlScript.Movements) < 5 {
 		max = len(sqlScript.Movements)
 	}
-
-	//errorhand.Controll(max)
 
 	for i := max; i > 0; i-- {
 		flex.AddItem(writeMoney(sqlScript.Movements[i-1].Mov), 0, 1, false)
@@ -187,7 +246,7 @@ func writeMoney(mon sqlScript.Movement) *tview.TextView {
 
 func footSet() *tview.Flex {
 
-	text := tview.NewTextView().SetText("(n) new pay \t (d) delet \n (" + string(tcell.RuneRArrow) + ") change box forward (in input) \t (" + string(tcell.RuneLArrow) + ") change box backwards (in input)").SetTextColor(tcell.ColorSnow)
+	text := tview.NewTextView().SetText("(n) new pay \t (a) add money \t (d) delet \n (" + string(tcell.RuneRArrow) + ") change box forward (in input) \t (" + string(tcell.RuneLArrow) + ") change box backwards (in input)").SetTextColor(tcell.ColorSnow)
 	text.SetTextAlign(tview.AlignBottom)
 	text.SetTextAlign(tview.AlignCenter)
 
