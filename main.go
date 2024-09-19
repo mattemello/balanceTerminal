@@ -21,12 +21,10 @@ func main() {
 			app.Stop()
 		} else if event.Rune() == 110 {
 			pages.SwitchToPage("Insert")
-		} else if event.Key() == 259 {
-			ui.SwitchFocus(1)
-		} else if event.Key() == 260 {
-			ui.SwitchFocus(-1)
 		} else if event.Rune() == 97 {
 			pages.SwitchToPage("Add")
+		} else if event.Rune() == 98 {
+			pages.SwitchToPage("Main")
 		}
 
 		return event

@@ -13,7 +13,6 @@ import (
 )
 
 var pages = tview.NewPages()
-var form = tview.NewForm()
 
 func AppCreation() *tview.Application {
 
@@ -42,7 +41,26 @@ func addMoney() *tview.Form {
 	form.SetLabelColor(tcell.ColorWhiteSmoke)
 	form.SetButtonBackgroundColor(tcell.Color(tcell.ColorValues[12]))
 
-	form.AddInputField("Insert money to add: ", "", 20, func(textToCheck string, lastChar rune) bool { return false }, func(text string) {})
+	form.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+
+		if event.Key() == 259 {
+			SwitchFocus(form, 1)
+		} else if event.Key() == 260 {
+			SwitchFocus(form, -1)
+		}
+
+		return event
+	})
+
+	form.AddInputField("Insert money to add: ", "", 20, func(textToCheck string, lastChar rune) bool {
+		if unicode.IsDigit(lastChar) || lastChar == '.' {
+			return true
+		}
+
+		return false
+	}, func(text string) {
+		_ = text
+	})
 
 	form.AddButton("Save money", func() {
 		//TO-DO: save the money in the db
@@ -51,7 +69,7 @@ func addMoney() *tview.Form {
 	return form
 }
 
-func SwitchFocus(val int) {
+func SwitchFocus(form *tview.Form, val int) {
 	id, bid := form.GetFocusedItemIndex()
 
 	if bid != -1 {
@@ -62,11 +80,23 @@ func SwitchFocus(val int) {
 }
 
 func insertCreation() *tview.Form {
+	var form = tview.NewForm()
 
 	form.SetFieldBackgroundColor(tcell.Color(tcell.ColorValues[12]))
 	form.SetFieldTextColor(tcell.ColorSnow)
 	form.SetLabelColor(tcell.ColorWhiteSmoke)
 	form.SetButtonBackgroundColor(tcell.Color(tcell.ColorValues[12]))
+
+	form.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+
+		if event.Key() == 259 {
+			SwitchFocus(form, 1)
+		} else if event.Key() == 260 {
+			SwitchFocus(form, -1)
+		}
+
+		return event
+	})
 
 	var move sqlScript.Movement
 
@@ -250,7 +280,7 @@ func footSet() *tview.Flex {
 	text.SetTextAlign(tview.AlignBottom)
 	text.SetTextAlign(tview.AlignCenter)
 
-	text1 := tview.NewTextView().SetText("(q) quit").SetTextColor(tcell.ColorSnow)
+	text1 := tview.NewTextView().SetText("(q) quit \n (b) back ").SetTextColor(tcell.ColorSnow)
 	text1.SetTextAlign(tview.AlignBottom)
 
 	keyboard := tview.NewFlex()
