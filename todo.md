@@ -3,7 +3,7 @@
 [x] organaize the progect
 [x] things i want it to do
 [x] decide the database
-[ ] save the date
+[x] save the date
 [ ] controll the data
 
 

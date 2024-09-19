@@ -8,22 +8,6 @@ import (
 	"github.com/mattemello/balanceTerminal/errorHand"
 )
 
-/*_, err = db.Exec("INSERT INTO spendingMoney VALUES(0, 0.5, 'real', 05/12/2021);")
-if err != nil {
-log.Fatal("29 Error with the database: ", err)
-return
-}
-
-_, err = db.Exec("DELETE FROM spendingMoney WHERE id_transition=0;")
-if err != nil {
-log.Fatal("Error with the database: ", err)
-return
-}*/
-
-/*func CreationRow(value float32, str string, dat time.Month) {
-
-}*/
-
 var db *sql.DB
 
 func CreationTable() *sql.DB {
@@ -46,12 +30,18 @@ func CreationTable() *sql.DB {
 
 func SaveTransaction(mon Movement) error {
 
-	//errorhand.Controll("INSERT INTO spendingMoney VALUES(" + strconv.Itoa(id) + ", " + strconv.FormatFloat(float64(mon.Money), 'f', 2, 32) + ", '" + mon.Tags + "', " + mon.Date.String() + ");")
-
 	_, err := db.Exec("INSERT INTO spendingMoney VALUES(" + strconv.Itoa(len(Movements)+1) + ", " + strconv.FormatFloat(float64(mon.Money), 'f', 2, 32) + ", '" + mon.Tags + "', '" + mon.Date.String() + "');")
 
 	return err
 
+}
+
+func SaveMoney(num float32) error {
+
+	//TO-DO: save the money in the db
+	_, err := db.Exec("INSERT INTO spendingMoney VALUES(" + strconv.Itoa(len(Movements)+1) + ",")
+
+	return err
 }
 
 func QuantityMoney() float32 {
