@@ -1,9 +1,13 @@
 package ui
 
 import (
+	"strconv"
 	"unicode"
 
 	"github.com/gdamore/tcell/v2"
+	errorhand "github.com/mattemello/balanceTerminal/errorHand"
+	"github.com/mattemello/balanceTerminal/sqlScript"
+
 	//"github.com/mattemello/balanceTerminal/errorHand"
 	"github.com/rivo/tview"
 )
@@ -28,6 +32,8 @@ func addMoney() *tview.Form {
 		return event
 	})
 
+	var moneyToAdd float64
+
 	form.AddInputField("Insert money to add: ", "", 20, func(textToCheck string, lastChar rune) bool {
 		if unicode.IsDigit(lastChar) || lastChar == '.' {
 			return true
@@ -35,11 +41,18 @@ func addMoney() *tview.Form {
 
 		return false
 	}, func(text string) {
-		_ = text
+		moneyToAdd, _ = strconv.ParseFloat(text, 32)
+
 	})
 
 	form.AddButton("Save money", func() {
-		//TO-DO: save the money in the db
+		err := sqlScript.SaveMoneyDB(float32(moneyToAdd))
+		if err != nil {
+			errorhand.BadSaving(err)
+		} else {
+			pages.RemovePage("menu")
+			pages.AddAndSwitchToPage("Main", menuCreation(), true)
+		}
 	})
 
 	return form

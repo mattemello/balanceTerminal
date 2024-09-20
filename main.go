@@ -6,18 +6,24 @@ import (
 	"github.com/mattemello/balanceTerminal/sqlScript"
 	"github.com/mattemello/balanceTerminal/ui"
 	_ "github.com/mattn/go-sqlite3"
+	"log"
 )
 
 var Db = sqlScript.CreationTable()
 
 func main() {
 
+	fileLog := errorhand.SetLogFile()
+	log.SetOutput(fileLog)
+
 	sqlScript.TakeValue()
+	sqlScript.QuantityMoney()
 
 	var pages = ui.PageCreation()
 	app := ui.AppCreation()
 	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		if event.Rune() == 113 {
+			defer fileLog.Close()
 			app.Stop()
 		} else if event.Rune() == 110 {
 			pages.SwitchToPage("Insert")

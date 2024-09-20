@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"strconv"
+	"time"
 
 	"github.com/mattemello/balanceTerminal/errorHand"
 )
@@ -36,18 +37,36 @@ func SaveTransaction(mon Movement) error {
 
 }
 
-func SaveMoney(num float32) error {
+func SaveMoneyDB(num float32) error {
 
-	//TO-DO: save the money in the db
-	_, err := db.Exec("INSERT INTO spendingMoney VALUES(" + strconv.Itoa(len(Movements)+1) + ",")
+	_, err := db.Exec("INSERT INTO money VALUES(" + strconv.Itoa(len(TotalMoneys)+1) + ", " + strconv.FormatFloat(float64(num), 'f', 2, 32) + ", '" + time.Now().String() + "');")
+	SaveMoney(num, time.Now())
 
 	return err
 }
 
-func QuantityMoney() float32 {
-	var val float32
+func QuantityMoney() {
 
-	return val
+	rows, err := db.QueryContext(context.Background(), "SELECT * FROM money;")
+	errorhand.HandlerError(err, errorhand.TakeFileLine()+" error in the selection of the row")
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var mon MoneyRow
+
+		err := rows.Scan(&mon.Id, &mon.RowMon.Total, &mon.RowMon.LastUp)
+		errorhand.HandlerError(err, errorhand.TakeFileLine()+" error in the scan of the rows")
+
+		TotalMoneys = append(TotalMoneys, mon)
+	}
+
+	if len(TotalMoneys) == 0 {
+		TotalMoney.Total = 0
+	} else {
+		TotalMoney = TotalMoneys[len(TotalMoneys)].RowMon
+	}
+
 }
 
 func TakeValue() {

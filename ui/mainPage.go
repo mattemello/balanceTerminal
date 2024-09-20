@@ -8,6 +8,34 @@ import (
 	"github.com/rivo/tview"
 )
 
+func menuCreation() *tview.Flex {
+	flex := flexCreation()
+
+	flex.AddItem(topBar(), 0, 2, false)
+	flex.AddItem(addMoneyUi(), 0, 7, false)
+
+	flex.AddItem(footSet(), 0, 1, false)
+
+	return flex
+}
+
+func topBar() *tview.Flex {
+	flex := flexCreation()
+
+	/*
+		money    |    spesi  	| 	a graphics?
+
+	*/
+
+	flex.SetDirection(tview.FlexColumn)
+
+	flex.AddItem(money(), 0, 1, false)
+	flex.AddItem(minusMoney(), 0, 1, false)
+	flex.AddItem(minusMoney(), 0, 1, false)
+
+	return flex
+}
+
 func addMoneyUi() *tview.Flex {
 
 	flex := flexCreation()
@@ -25,36 +53,6 @@ func addMoneyUi() *tview.Flex {
 	for i := 5 - len(sqlScript.Movements); i > 0; i-- {
 		flex.AddItem(tview.NewBox().SetBorder(true), 0, 1, false)
 	}
-
-	return flex
-}
-
-func menuCreation() *tview.Flex {
-	flex := flexCreation()
-
-	flex.AddItem(topBar(), 0, 2, false)
-	flex.AddItem(addMoneyUi(), 0, 7, false)
-
-	flex.AddItem(footSet(), 0, 1, false)
-
-	return flex
-}
-
-func topBar() *tview.Flex {
-	flex := flexCreation()
-
-	//flex.AddItem()
-
-	/*
-		money    |    spesi  	| 	a graphics?
-
-	*/
-
-	flex.SetDirection(tview.FlexColumn)
-
-	flex.AddItem(money(), 0, 1, false)
-	flex.AddItem(minusMoney(), 0, 1, false)
-	flex.AddItem(minusMoney(), 0, 1, false)
 
 	return flex
 }
@@ -77,6 +75,13 @@ func footSet() *tview.Flex {
 
 func money() *tview.TextView {
 	t := tview.NewTextView()
+
+	t.SetBorder(true)
+	t.SetTitle("total money")
+	t.SetTextAlign(tview.AlignCenter)
+	t.SetSize(1000, 1000)
+
+	t.SetText("['::i'] " + strconv.FormatFloat(float64(sqlScript.TotalMoney.Total), 'f', 2, 32))
 
 	return t
 }

@@ -7,10 +7,20 @@ import (
 	"strconv"
 )
 
+func SetLogFile() *os.File {
+	var fileLog, errF = os.OpenFile("./tmp/logfile", os.O_APPEND|os.O_RDWR|os.O_CREATE, 0644)
+	if errF != nil {
+		log.Fatal("Error: ", errF, " -> can't open the log file")
+		os.Exit(1)
+	}
+
+	return fileLog
+
+}
+
 func HandlerError(err error, txt string) {
 	if err != nil {
-		log.Fatal("Error: ", err, " -> ", txt)
-		os.Exit(1)
+		log.Println(" Error: ", err, " -> ", txt)
 	}
 }
 
@@ -22,7 +32,7 @@ func TakeFileLine() string {
 
 func BadSaving(err error) {
 	if err != nil {
-		log.Fatal("Error in the sqlite: ", err)
+		log.Println("Error in the sqlite: ", err)
 		os.Exit(1)
 	}
 }

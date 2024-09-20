@@ -13,6 +13,18 @@ type MovementRow struct {
 	Mov Movement
 }
 
+type Money struct {
+	Total  float32
+	LastUp time.Time
+}
+
+type MoneyRow struct {
+	Id     int
+	RowMon Money
+}
+
+var TotalMoney Money
+
 var Movements []MovementRow
 
 func SaveMove(move Movement) {
@@ -23,20 +35,20 @@ func SaveMove(move Movement) {
 	mov.Mov = move
 
 	Movements = append(Movements, mov)
+	TotalMoney.Total -= mov.Mov.Money
+	TotalMoney.LastUp = mov.Mov.Date
 }
 
-/*func (move Movement) addMoney(num float32) {
-	move.money = num
+var TotalMoneys []MoneyRow
+
+func SaveMoney(mon float32, tim time.Time) {
+	var mov MoneyRow
+
+	mov.Id = len(TotalMoneys) + 1
+	mov.RowMon.Total = mon
+	mov.RowMon.LastUp = tim
+
+	TotalMoneys = append(TotalMoneys, mov)
+	TotalMoney.Total += mon
+	TotalMoney.LastUp = tim
 }
-func (move Movement) addTags(tag string) {
-	move.tags = tag
-}
-func (move Movement) addDay(day int) {
-	move.day = day
-}
-func (move Movement) addMonth(month int) {
-	move.month = month
-}
-func (move Movement) addYear(year int) {
-	move.year = year
-}*/
