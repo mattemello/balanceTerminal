@@ -81,7 +81,7 @@ func money() *tview.TextView {
 	t.SetTextAlign(tview.AlignCenter)
 	t.SetSize(1000, 1000)
 
-	t.SetText("['::i'] " + strconv.FormatFloat(float64(sqlScript.TotalMoney.Total), 'f', 2, 32))
+	t.SetText(strconv.FormatFloat(float64(sqlScript.TotalMoney.Total), 'f', 2, 32))
 
 	return t
 }

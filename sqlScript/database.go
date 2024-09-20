@@ -64,7 +64,7 @@ func QuantityMoney() {
 	if len(TotalMoneys) == 0 {
 		TotalMoney.Total = 0
 	} else {
-		TotalMoney = TotalMoneys[len(TotalMoneys)].RowMon
+		TotalMoney = TotalMoneys[len(TotalMoneys)-1].RowMon
 	}
 
 }
