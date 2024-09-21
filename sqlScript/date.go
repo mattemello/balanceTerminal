@@ -6,6 +6,7 @@ type Movement struct {
 	Money float32
 	Tags  string
 	Date  time.Time
+	Add   bool
 }
 
 type MovementRow struct {
@@ -35,20 +36,15 @@ func SaveMove(move Movement) {
 	mov.Mov = move
 
 	Movements = append(Movements, mov)
-	TotalMoney.Total -= mov.Mov.Money
-	TotalMoney.LastUp = mov.Mov.Date
+	if mov.Mov.Add {
+		TotalMoney.Total += mov.Mov.Money
+	} else {
+		TotalMoney.Total -= mov.Mov.Money
+	}
+	TotalMoney.LastUp = time.Now()
+
+	SaveMoneyDB(TotalMoney.Total, TotalMoney.LastUp)
+	TotalMoneys = append(TotalMoneys, MoneyRow{len(TotalMoneys) + 1, TotalMoney})
 }
 
 var TotalMoneys []MoneyRow
-
-func SaveMoney(mon float32, tim time.Time) {
-	var mov MoneyRow
-
-	mov.Id = len(TotalMoneys) + 1
-	mov.RowMon.Total = mon
-	mov.RowMon.LastUp = tim
-
-	TotalMoneys = append(TotalMoneys, mov)
-	TotalMoney.Total += mon
-	TotalMoney.LastUp = tim
-}

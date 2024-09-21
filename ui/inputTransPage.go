@@ -98,6 +98,8 @@ func insertCreation() *tview.Form {
 		move.Tags = option
 	})
 
+	move.Add = false
+
 	form.AddButton("save", func() {
 		err := sqlScript.SaveTransaction(move)
 		if err != nil {

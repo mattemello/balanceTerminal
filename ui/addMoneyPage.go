@@ -2,6 +2,7 @@ package ui
 
 import (
 	"strconv"
+	"time"
 	"unicode"
 
 	"github.com/gdamore/tcell/v2"
@@ -46,10 +47,18 @@ func addMoney() *tview.Form {
 	})
 
 	form.AddButton("Save money", func() {
-		err := sqlScript.SaveMoneyDB(float32(moneyToAdd))
+		var mv sqlScript.Movement
+
+		mv.Money = float32(moneyToAdd)
+		mv.Date = time.Now()
+		mv.Tags = ""
+		mv.Add = true
+
+		err := sqlScript.SaveTransaction(mv)
 		if err != nil {
 			errorhand.BadSaving(err)
 		} else {
+			sqlScript.SaveMove(mv)
 			pages.RemovePage("menu")
 			pages.AddAndSwitchToPage("Main", menuCreation(), true)
 		}

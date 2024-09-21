@@ -93,7 +93,9 @@ func minusMoney() *tview.TextView {
 	var m float32
 
 	for _, tot := range sqlScript.Movements {
-		m = m + tot.Mov.Money
+		if !tot.Mov.Add {
+			m = m + tot.Mov.Money
+		}
 	}
 
 	t.SetBorder(true)

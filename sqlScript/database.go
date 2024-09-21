@@ -16,7 +16,7 @@ func CreationTable() *sql.DB {
 	db, err = sql.Open("sqlite3", "money.db")
 	errorhand.HandlerError(err, errorhand.TakeFileLine()+"error in the opening of the db")
 
-	queryCreationSpending := "CREATE TABLE IF NOT EXISTS spendingMoney( id_transition INTEGER PRIMARY KEY, valur_tansaction REAL, tags TEXT, date DATETIME )"
+	queryCreationSpending := "CREATE TABLE IF NOT EXISTS spendingMoney( id_transition INTEGER PRIMARY KEY, valur_tansaction REAL, tags TEXT, date DATETIME, toadd INTEGER);"
 
 	_, err = db.Exec(queryCreationSpending)
 	errorhand.HandlerError(err, errorhand.TakeFileLine()+" problem with the query")
@@ -31,16 +31,15 @@ func CreationTable() *sql.DB {
 
 func SaveTransaction(mon Movement) error {
 
-	_, err := db.Exec("INSERT INTO spendingMoney VALUES(" + strconv.Itoa(len(Movements)+1) + ", " + strconv.FormatFloat(float64(mon.Money), 'f', 2, 32) + ", '" + mon.Tags + "', '" + mon.Date.String() + "');")
+	_, err := db.Exec("INSERT INTO spendingMoney VALUES(" + strconv.Itoa(len(Movements)+1) + ", " + strconv.FormatFloat(float64(mon.Money), 'f', 2, 32) + ", '" + mon.Tags + "', '" + mon.Date.String() + "', " + strconv.FormatBool(mon.Add) + ");")
 
 	return err
 
 }
 
-func SaveMoneyDB(num float32) error {
+func SaveMoneyDB(num float32, ti time.Time) error {
 
-	_, err := db.Exec("INSERT INTO money VALUES(" + strconv.Itoa(len(TotalMoneys)+1) + ", " + strconv.FormatFloat(float64(num), 'f', 2, 32) + ", '" + time.Now().String() + "');")
-	SaveMoney(num, time.Now())
+	_, err := db.Exec("INSERT INTO money VALUES(" + strconv.Itoa(len(TotalMoneys)+1) + ", " + strconv.FormatFloat(float64(num), 'f', 2, 32) + ", '" + ti.String() + "');")
 
 	return err
 }
@@ -79,7 +78,7 @@ func TakeValue() {
 	for rows.Next() {
 		var mov MovementRow
 
-		err := rows.Scan(&mov.Id, &mov.Mov.Money, &mov.Mov.Tags, &mov.Mov.Date)
+		err := rows.Scan(&mov.Id, &mov.Mov.Money, &mov.Mov.Tags, &mov.Mov.Date, &mov.Mov.Add)
 		errorhand.HandlerError(err, errorhand.TakeFileLine()+" error in the scan of the rows")
 
 		Movements = append(Movements, mov)
