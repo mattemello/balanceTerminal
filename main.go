@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/gdamore/tcell/v2"
 	"github.com/mattemello/balanceTerminal/errorHand"
 	"github.com/mattemello/balanceTerminal/sqlScript"
 	"github.com/mattemello/balanceTerminal/ui"
@@ -15,26 +14,14 @@ func main() {
 
 	fileLog := errorhand.SetLogFile()
 	log.SetOutput(fileLog)
+	defer fileLog.Close()
 
 	sqlScript.TakeValue()
 	sqlScript.QuantityMoney()
+	sqlScript.TakeTags()
 
 	var pages = ui.PageCreation()
 	app := ui.AppCreation()
-	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-		if event.Rune() == 113 {
-			defer fileLog.Close()
-			app.Stop()
-		} else if event.Rune() == 110 {
-			pages.SwitchToPage("Insert")
-		} else if event.Rune() == 97 {
-			pages.SwitchToPage("Add")
-		} else if event.Rune() == 98 {
-			pages.SwitchToPage("Main")
-		}
-
-		return event
-	})
 
 	err := app.SetRoot(pages, true).Run()
 	errorhand.HandlerError(err, errorhand.TakeFileLine()+" error with the run of the app")

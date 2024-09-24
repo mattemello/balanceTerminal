@@ -1,29 +1,21 @@
 package ui
 
 import (
-	"strconv"
-	"strings"
-	"time"
-	"unicode"
-
 	"github.com/gdamore/tcell/v2"
 	errorhand "github.com/mattemello/balanceTerminal/errorHand"
 	"github.com/mattemello/balanceTerminal/sqlScript"
-
 	"github.com/rivo/tview"
 )
 
-func addFMoney() *tview.Flex {
+func insertFTags() *tview.Flex {
 	f := flexCreation()
 
-	f.AddItem(addMoney(), 0, 9, true)
+	f.AddItem(insertTags(), 0, 9, true)
 	f.AddItem(footSet(), 0, 1, false)
 
 	return f
 }
-
-func addMoney() *tview.Form {
-
+func insertTags() *tview.Form {
 	form := tview.NewForm()
 
 	form.SetFieldBackgroundColor(tcell.Color(tcell.ColorValues[12]))
@@ -42,40 +34,28 @@ func addMoney() *tview.Form {
 		return event
 	})
 
-	var moneyToAdd float64
+	var fiel string
 
-	form.SetBorder(true).SetTitle("Page to add the money")
+	form.SetBorder(true).SetTitle("Page to add a new tags")
 
-	form.AddInputField("Insert money to add: ", "", 20, func(textToCheck string, lastChar rune) bool {
-		if unicode.IsDigit(lastChar) || lastChar == '.' {
-			if len(strings.Split(textToCheck, ".")) > 2 {
-				return false
-			}
-			return true
-		}
+	//TO-DO: stop the switch of page when press a n
 
-		return false
-	}, func(text string) {
-		moneyToAdd, _ = strconv.ParseFloat(text, 32)
-
+	form.AddInputField("Tag: ", "", 20, nil, func(text string) {
+		fiel = text
 	})
 
-	form.AddButton("Save money", func() {
-		var mv sqlScript.Movement
+	form.AddButton("Save tag", func() {
+		//TO-DO: controll if the tags its already in
+		err := sqlScript.SaveTags(fiel)
 
-		mv.Money = float32(moneyToAdd)
-		mv.Date = time.Now()
-		mv.Tags = ""
-		mv.Add = true
-
-		err := sqlScript.SaveTransaction(mv)
 		if err != nil {
 			errorhand.BadSaving(err)
 		} else {
-			sqlScript.SaveMove(mv)
+			sqlScript.SaveTag(fiel)
 			pages.RemovePage("menu")
 			pages.AddAndSwitchToPage("Main", menuCreation(), true)
 		}
+
 	})
 
 	return form

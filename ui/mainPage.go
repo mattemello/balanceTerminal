@@ -59,11 +59,11 @@ func addMoneyUi() *tview.Flex {
 
 func footSet() *tview.Flex {
 
-	text := tview.NewTextView().SetText("(n) new pay \t (a) add money \t (d) delet \n (" + string(tcell.RuneRArrow) + ") change box forward (in input) \t (" + string(tcell.RuneLArrow) + ") change box backwards (in input)").SetTextColor(tcell.ColorSnow)
+	text := tview.NewTextView().SetText("(N) new pay \t (A) add money \t (D) delet \t (T) add tag \n (" + string(tcell.RuneRArrow) + ") (" + string(tcell.RuneLArrow) + ") navigate ").SetTextColor(tcell.ColorSnow)
 	text.SetTextAlign(tview.AlignBottom)
 	text.SetTextAlign(tview.AlignCenter)
 
-	text1 := tview.NewTextView().SetText("(q) quit \n (b) back ").SetTextColor(tcell.ColorSnow)
+	text1 := tview.NewTextView().SetText("(Q) quit \n (B) back ").SetTextColor(tcell.ColorSnow)
 	text1.SetTextAlign(tview.AlignBottom)
 
 	keyboard := tview.NewFlex()
@@ -112,6 +112,14 @@ func writeMoney(mon sqlScript.Movement) *tview.TextView {
 	t := tview.NewTextView()
 
 	t.SetBorder(true)
+
+	if mon.Add {
+		t.SetBorderColor(tcell.ColorGreen)
+		//t.SetTextColor(tcell.ColorGreen)
+	} else {
+		t.SetBorderColor(tcell.ColorRed)
+		//t.SetTextColor(tcell.ColorRed)
+	}
 
 	t.SetText(strconv.FormatFloat(float64(mon.Money), 'f', 2, 32) + "\t \t \t \t \t \t \t \t \t \t \t \t " + mon.Date.Format("02/01/2006") + " \t \t \t \t \t \t \t \t \t \t \t \t " + mon.Tags)
 

@@ -12,6 +12,15 @@ import (
 	"github.com/rivo/tview"
 )
 
+func insertFCreation() *tview.Flex {
+	f := flexCreation()
+
+	f.AddItem(insertCreation(), 0, 9, true)
+	f.AddItem(footSet(), 0, 1, true)
+
+	return f
+}
+
 func insertCreation() *tview.Form {
 	var form = tview.NewForm()
 
@@ -36,6 +45,9 @@ func insertCreation() *tview.Form {
 	form.AddTextView("Insert the money used: \n", "", 0, 1, false, false).SetBorder(true)
 	form.AddInputField("money", "", 20, func(textToCheck string, lastChar rune) bool {
 		if unicode.IsDigit(lastChar) || lastChar == '.' {
+			if len(strings.Split(textToCheck, ".")) > 2 {
+				return false
+			}
 			return true
 		}
 
@@ -48,7 +60,7 @@ func insertCreation() *tview.Form {
 			move.Money = float32(m)
 		}
 	})
-	form.AddInputField("date (format: dd/mm/yyyy) ", "", 20, func(textToCheck string, lastChar rune) bool {
+	form.AddInputField("date (format: dd/mm/yyyy) ", time.Now().Format("02/01/2006"), 20, func(textToCheck string, lastChar rune) bool {
 		if unicode.IsDigit(lastChar) {
 			return true
 		}
@@ -92,9 +104,8 @@ func insertCreation() *tview.Form {
 			errorhand.HandlerError(err, errorhand.TakeFileLine()+" error in the parse of the date")
 		}
 	})
-	var prova = []string{"ciao", "due"}
 
-	form.AddDropDown("tags", prova, 0, func(option string, optionIndex int) {
+	form.AddDropDown("tags", sqlScript.AllTags, 0, func(option string, optionIndex int) {
 		move.Tags = option
 	})
 

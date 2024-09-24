@@ -26,6 +26,11 @@ func CreationTable() *sql.DB {
 	_, err = db.Exec(queryCreationMoney)
 	errorhand.HandlerError(err, errorhand.TakeFileLine()+" problem with the query")
 
+	queryCreationTags := "CREATE TABLE IF NOT EXISTS tags(tags string PRIMARY KEY);"
+
+	_, err = db.Exec(queryCreationTags)
+	errorhand.HandlerError(err, errorhand.TakeFileLine()+" problem with the query")
+
 	return db
 }
 
@@ -42,6 +47,39 @@ func SaveMoneyDB(num float32, ti time.Time) error {
 	_, err := db.Exec("INSERT INTO money VALUES(" + strconv.Itoa(len(TotalMoneys)+1) + ", " + strconv.FormatFloat(float64(num), 'f', 2, 32) + ", '" + ti.String() + "');")
 
 	return err
+}
+
+func SaveTags(t string) error {
+
+	_, err := db.Exec("INSERT INTO tags VALUES('" + t + "');")
+
+	return err
+}
+
+func TakeTags() {
+
+	rows, err := db.QueryContext(context.Background(), "SELECT * FROM tags;")
+	errorhand.HandlerError(err, errorhand.TakeFileLine()+" error in the selection of the row")
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var mon string
+
+		err := rows.Scan(&mon)
+		errorhand.HandlerError(err, errorhand.TakeFileLine()+" error in the scan of the rows")
+
+		AllTags = append(AllTags, mon)
+	}
+
+	if len(AllTags) == 0 {
+		SaveTags("Transport")
+		SaveTag("Transport")
+		SaveTags("Shopping")
+		SaveTag("Shopping")
+		SaveTags("Food")
+		SaveTag("Food")
+	}
 }
 
 func QuantityMoney() {

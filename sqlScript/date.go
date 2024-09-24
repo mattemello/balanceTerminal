@@ -24,6 +24,8 @@ type MoneyRow struct {
 	RowMon Money
 }
 
+var AllTags []string
+
 var TotalMoney Money
 
 var Movements []MovementRow
@@ -45,6 +47,10 @@ func SaveMove(move Movement) {
 
 	SaveMoneyDB(TotalMoney.Total, TotalMoney.LastUp)
 	TotalMoneys = append(TotalMoneys, MoneyRow{len(TotalMoneys) + 1, TotalMoney})
+}
+
+func SaveTag(s string) {
+	AllTags = append(AllTags, s)
 }
 
 var TotalMoneys []MoneyRow
