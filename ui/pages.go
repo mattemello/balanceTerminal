@@ -7,24 +7,15 @@ import (
 )
 
 var pages = tview.NewPages()
+var app = tview.NewApplication()
+
+func stopApp() {
+	app.Stop()
+}
 
 func AppCreation() *tview.Application {
 
-	app := tview.NewApplication()
-
 	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-		if event.Rune() == 81 {
-			app.Stop()
-		} else if event.Rune() == 78 {
-			pages.AddAndSwitchToPage("Insert", insertFCreation(), true)
-		} else if event.Rune() == 65 {
-			pages.AddAndSwitchToPage("Add", addFMoney(), true)
-		} else if event.Rune() == 66 {
-			pages.AddAndSwitchToPage("Main", menuCreation(), true)
-		} else if event.Rune() == 84 {
-			pages.AddAndSwitchToPage("Tags", insertFTags(), true)
-		}
-
 		return event
 	})
 	return app

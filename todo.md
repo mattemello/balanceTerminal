@@ -5,6 +5,7 @@
 [x] decide the database
 [x] save the date
 [ ] controll the data
+[ ] think who to delet the data
 
 
 the make file will be do the sql database

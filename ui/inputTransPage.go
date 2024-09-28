@@ -16,9 +16,17 @@ func insertFCreation() *tview.Flex {
 	f := flexCreation()
 
 	f.AddItem(insertCreation(), 0, 9, true)
-	f.AddItem(footSet(), 0, 1, true)
+	f.AddItem(footSetTran(), 0, 1, true)
 
 	return f
+}
+
+func footSetTran() *tview.TextView {
+
+	text1 := tview.NewTextView().SetText("(esc) back \n (" + string(tcell.RuneLArrow) + "/" + string(tcell.RuneRArrow) + ") move  ").SetTextColor(tcell.ColorSnow)
+	text1.SetTextAlign(tview.AlignCenter).SetBorder(true)
+
+	return text1
 }
 
 func insertCreation() *tview.Form {
@@ -31,6 +39,9 @@ func insertCreation() *tview.Form {
 
 	form.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 
+		if event.Key() == tcell.KeyEsc {
+			pages.SwitchToPage("Main")
+		}
 		if event.Key() == 259 {
 			SwitchFocus(form, 1)
 		} else if event.Key() == 260 {

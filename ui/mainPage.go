@@ -11,8 +11,29 @@ import (
 func menuCreation() *tview.Flex {
 	flex := flexCreation()
 
+	flex.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+		if event.Rune() == 110 {
+			pages.AddAndSwitchToPage("Insert", insertFCreation(), true)
+		} else if event.Rune() == 97 {
+			pages.AddAndSwitchToPage("Add", addFMoney(), true)
+		} else if event.Rune() == 98 {
+			pages.AddAndSwitchToPage("Main", menuCreation(), true)
+		} else if event.Rune() == 116 {
+			pages.AddAndSwitchToPage("Tags", insertFTags(), true)
+		}
+		if event.Rune() == 115 {
+			pages.AddAndSwitchToPage("Err", PageError(), true)
+		}
+
+		if event.Rune() == 113 {
+			stopApp()
+		}
+
+		return event
+	})
+
 	flex.AddItem(topBar(), 0, 2, false)
-	flex.AddItem(addMoneyUi(), 0, 7, false)
+	flex.AddItem(addMoneyUi(), 0, 7, true)
 
 	flex.AddItem(footSet(), 0, 1, false)
 
@@ -59,11 +80,11 @@ func addMoneyUi() *tview.Flex {
 
 func footSet() *tview.Flex {
 
-	text := tview.NewTextView().SetText("(N) new pay \t (A) add money \t (D) delet \t (T) add tag \n (" + string(tcell.RuneRArrow) + ") (" + string(tcell.RuneLArrow) + ") navigate ").SetTextColor(tcell.ColorSnow)
+	text := tview.NewTextView().SetText("(n) new pay \t (a) add money \t (d) delet \t (t) add tag \n (" + string(tcell.RuneLArrow) + "/" + string(tcell.RuneRArrow) + ") navigate ").SetTextColor(tcell.ColorSnow)
 	text.SetTextAlign(tview.AlignBottom)
 	text.SetTextAlign(tview.AlignCenter)
 
-	text1 := tview.NewTextView().SetText("(Q) quit \n (B) back ").SetTextColor(tcell.ColorSnow)
+	text1 := tview.NewTextView().SetText("(q) quit").SetTextColor(tcell.ColorSnow)
 	text1.SetTextAlign(tview.AlignBottom)
 
 	keyboard := tview.NewFlex()
@@ -107,28 +128,49 @@ func minusMoney() *tview.TextView {
 
 }
 
-func writeMoney(mon sqlScript.Movement) *tview.TextView {
+func writeMoney(mon sqlScript.Movement) *tview.Flex {
+	flex := tview.NewFlex()
 
 	t := tview.NewTextView()
+	t1 := tview.NewTextView()
+	t2 := tview.NewTextView()
 
-	t.SetBorder(true)
+	flex.SetBorder(true)
 
 	if mon.Add {
-		t.SetBorderColor(tcell.ColorGreen)
+		flex.SetBorderColor(tcell.ColorGreen)
 		//t.SetTextColor(tcell.ColorGreen)
 	} else {
-		t.SetBorderColor(tcell.ColorRed)
+		flex.SetBorderColor(tcell.ColorRed)
 		//t.SetTextColor(tcell.ColorRed)
 	}
 
-	t.SetText(strconv.FormatFloat(float64(mon.Money), 'f', 2, 32) + "\t \t \t \t \t \t \t \t \t \t \t \t " + mon.Date.Format("02/01/2006") + " \t \t \t \t \t \t \t \t \t \t \t \t " + mon.Tags)
+	flex.AddItem(tview.NewForm().AddCheckbox("", false, nil), 0, 1, true)
+
+	t.SetText(strconv.FormatFloat(float64(mon.Money), 'f', 2, 32))
+	t.SetTextAlign(tview.AlignCenter)
+	flex.AddItem(t, 0, 1, false)
+
+	t1.SetText(mon.Date.Format("02/01/2006"))
+	t1.SetTextAlign(tview.AlignCenter)
+	flex.AddItem(t1, 0, 1, false)
+
+	t2.SetText(mon.Tags)
+	t2.SetTextAlign(tview.AlignCenter)
+	flex.AddItem(t2, 0, 1, false)
 
 	t.SetDrawFunc(func(screen tcell.Screen, x, y, w, h int) (int, int, int, int) {
 		y += h / 2
 		return x, y, w, h
 	})
+	t1.SetDrawFunc(func(screen tcell.Screen, x, y, w, h int) (int, int, int, int) {
+		y += h / 2
+		return x, y, w, h
+	})
+	t2.SetDrawFunc(func(screen tcell.Screen, x, y, w, h int) (int, int, int, int) {
+		y += h / 2
+		return x, y, w, h
+	})
 
-	t.SetTextAlign(tview.AlignCenter)
-
-	return t
+	return flex
 }

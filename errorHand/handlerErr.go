@@ -21,6 +21,7 @@ func SetLogFile() *os.File {
 func HandlerError(err error, txt string) {
 	if err != nil {
 		log.Println(" Error: ", err, " -> ", txt)
+
 	}
 }
 

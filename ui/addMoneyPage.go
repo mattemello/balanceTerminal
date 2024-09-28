@@ -17,9 +17,17 @@ func addFMoney() *tview.Flex {
 	f := flexCreation()
 
 	f.AddItem(addMoney(), 0, 9, true)
-	f.AddItem(footSet(), 0, 1, false)
+	f.AddItem(footSetAdd(), 0, 1, false)
 
 	return f
+}
+
+func footSetAdd() *tview.TextView {
+
+	text1 := tview.NewTextView().SetText("(esc) back \n (" + string(tcell.RuneLArrow) + "/" + string(tcell.RuneRArrow) + ") move  ").SetTextColor(tcell.ColorSnow)
+	text1.SetTextAlign(tview.AlignCenter).SetBorder(true)
+
+	return text1
 }
 
 func addMoney() *tview.Form {
@@ -32,6 +40,10 @@ func addMoney() *tview.Form {
 	form.SetButtonBackgroundColor(tcell.Color(tcell.ColorValues[12]))
 
 	form.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+
+		if event.Key() == tcell.KeyEsc {
+			pages.SwitchToPage("Main")
+		}
 
 		if event.Key() == 259 {
 			SwitchFocus(form, 1)
