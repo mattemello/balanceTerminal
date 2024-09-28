@@ -4,6 +4,7 @@ import (
 	"strconv"
 
 	"github.com/gdamore/tcell/v2"
+	errorhand "github.com/mattemello/balanceTerminal/errorHand"
 	"github.com/mattemello/balanceTerminal/sqlScript"
 	"github.com/rivo/tview"
 )
@@ -20,10 +21,13 @@ func menuCreation() *tview.Flex {
 			pages.AddAndSwitchToPage("Main", menuCreation(), true)
 		} else if event.Rune() == 116 {
 			pages.AddAndSwitchToPage("Tags", insertFTags(), true)
+		} else if event.Key() == 257 {
+			//TO-DO UP
+		} else if event.Key() == 258 {
+			//TO-DO DOWN
 		}
-		if event.Rune() == 115 {
-			pages.AddAndSwitchToPage("Err", PageError(), true)
-		}
+
+		errorhand.Controll(event)
 
 		if event.Rune() == 113 {
 			stopApp()
@@ -43,15 +47,9 @@ func menuCreation() *tview.Flex {
 func topBar() *tview.Flex {
 	flex := flexCreation()
 
-	/*
-		money    |    spesi  	| 	a graphics?
-
-	*/
-
 	flex.SetDirection(tview.FlexColumn)
 
 	flex.AddItem(money(), 0, 1, false)
-	flex.AddItem(minusMoney(), 0, 1, false)
 	flex.AddItem(minusMoney(), 0, 1, false)
 
 	return flex
@@ -67,8 +65,8 @@ func addMoneyUi() *tview.Flex {
 		max = len(sqlScript.Movements)
 	}
 
-	for i := max; i > 0; i-- {
-		flex.AddItem(writeMoney(sqlScript.Movements[i-1].Mov), 0, 1, false)
+	for i := 0; i < max; i++ {
+		flex.AddItem(writeMoney(sqlScript.Movements[len(sqlScript.Movements)-i-1].Mov), 0, 1, true)
 	}
 
 	for i := 5 - len(sqlScript.Movements); i > 0; i-- {

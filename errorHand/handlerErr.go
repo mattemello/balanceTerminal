@@ -5,6 +5,8 @@ import (
 	"os"
 	"runtime"
 	"strconv"
+
+	"github.com/gdamore/tcell/v2"
 )
 
 func SetLogFile() *os.File {
@@ -34,11 +36,9 @@ func TakeFileLine() string {
 func BadSaving(err error) {
 	if err != nil {
 		log.Println("Error in the sqlite: ", err)
-		os.Exit(1)
 	}
 }
 
-func Controll(s int) {
-	log.Fatalln("item id (dropdown): ", s)
-	os.Exit(1)
+func Controll(s *tcell.EventKey) {
+	log.Fatalln("item id (dropdown): ", s.Key())
 }

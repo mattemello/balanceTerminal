@@ -5,15 +5,15 @@ import (
 	"github.com/rivo/tview"
 )
 
-func PageError() *tview.Modal /*controll if there is sometingh better*/ {
+func PageError(m string) *tview.Modal {
 
 	modal := tview.NewModal()
 
-	modal.SetText("Not valid")
+	modal.SetText(m)
 	modal.AddButtons([]string{"go back"})
 
 	modal.SetDoneFunc(func(buttonIndex int, buttonLabel string) {
-		pages.SwitchToPage("Main")
+		pages.AddAndSwitchToPage("Main", menuCreation(), true)
 	})
 
 	modal.SetBackgroundColor(tcell.ColorBlack)

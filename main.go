@@ -8,10 +8,6 @@ import (
 	"log"
 )
 
-func CallErr() {
-	ui.PageError()
-}
-
 var Db = sqlScript.CreationTable()
 
 func main() {

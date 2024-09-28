@@ -7,6 +7,11 @@
 [ ] controll the data
 [ ] think who to delet the data
 
+# make file
+create the dir tmp
+go build
+make it in the go/bin?
+
 
 the make file will be do the sql database
 

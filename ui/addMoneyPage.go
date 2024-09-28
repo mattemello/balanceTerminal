@@ -83,6 +83,7 @@ func addMoney() *tview.Form {
 		err := sqlScript.SaveTransaction(mv)
 		if err != nil {
 			errorhand.BadSaving(err)
+			pages.AddAndSwitchToPage("err", PageError("Error whit the save, controll the log file"), true)
 		} else {
 			sqlScript.SaveMove(mv)
 			pages.RemovePage("menu")

@@ -49,18 +49,23 @@ func insertTags() *tview.Form {
 
 	form.SetBorder(true).SetTitle("Page to add a new tags")
 
-	//TO-DO: stop the switch of page when press a n
-
 	form.AddInputField("Tag: ", "", 20, nil, func(text string) {
 		fiel = text
 	})
 
 	form.AddButton("Save tag", func() {
-		//TO-DO: controll if the tags its already in
+
+		for _, c := range sqlScript.AllTags {
+			if c == fiel {
+				pages.AddAndSwitchToPage("err", PageError("The tag is already in"), true)
+			}
+		}
+
 		err := sqlScript.SaveTags(fiel)
 
 		if err != nil {
 			errorhand.BadSaving(err)
+			pages.AddAndSwitchToPage("err", PageError("Error whit the save, controll the log file"), true)
 		} else {
 			sqlScript.SaveTag(fiel)
 			pages.RemovePage("menu")
