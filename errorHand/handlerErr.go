@@ -5,8 +5,7 @@ import (
 	"os"
 	"runtime"
 	"strconv"
-
-	"github.com/gdamore/tcell/v2"
+	"time"
 )
 
 func SetLogFile() *os.File {
@@ -39,6 +38,6 @@ func BadSaving(err error) {
 	}
 }
 
-func Controll(s *tcell.EventKey) {
-	log.Fatalln("item id (dropdown): ", s.Key())
+func Controll(s time.Time) {
+	log.Fatalln("item id (dropdown): ", s)
 }

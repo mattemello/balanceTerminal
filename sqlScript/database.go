@@ -95,6 +95,9 @@ func QuantityMoney() {
 		err := rows.Scan(&mon.Id, &mon.RowMon.Total, &mon.RowMon.LastUp)
 		errorhand.HandlerError(err, errorhand.TakeFileLine()+" error in the scan of the rows")
 
+		//fmt.Println(mon.RowMon.LastUp)
+		//errorhand.Controll(mon.RowMon.LastUp)
+
 		TotalMoneys = append(TotalMoneys, mon)
 	}
 
@@ -116,7 +119,9 @@ func TakeValue() {
 	for rows.Next() {
 		var mov MovementRow
 
-		err := rows.Scan(&mov.Id, &mov.Mov.Money, &mov.Mov.Tags, &mov.Mov.Date, &mov.Mov.Add)
+		var m time.Time
+
+		err := rows.Scan(&mov.Id, &mov.Mov.Money, &mov.Mov.Tags, &m, &mov.Mov.Add)
 		errorhand.HandlerError(err, errorhand.TakeFileLine()+" error in the scan of the rows")
 
 		Movements = append(Movements, mov)

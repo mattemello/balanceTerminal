@@ -4,7 +4,6 @@ import (
 	"strconv"
 
 	"github.com/gdamore/tcell/v2"
-	errorhand "github.com/mattemello/balanceTerminal/errorHand"
 	"github.com/mattemello/balanceTerminal/sqlScript"
 	"github.com/rivo/tview"
 )
@@ -26,8 +25,6 @@ func menuCreation() *tview.Flex {
 		} else if event.Key() == 258 {
 			//TO-DO DOWN
 		}
-
-		errorhand.Controll(event)
 
 		if event.Rune() == 113 {
 			stopApp()
