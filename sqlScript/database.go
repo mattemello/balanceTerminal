@@ -16,7 +16,7 @@ func CreationTable() *sql.DB {
 	db, err = sql.Open("sqlite3", "money.db")
 	errorhand.HandlerError(err, errorhand.TakeFileLine()+"error in the opening of the db")
 
-	queryCreationSpending := "CREATE TABLE IF NOT EXISTS spendingMoney( id_transition INTEGER PRIMARY KEY, valur_tansaction REAL, tags TEXT, date DATETIME, toadd INTEGER);"
+	queryCreationSpending := "CREATE TABLE IF NOT EXISTS spendingMoney( id_transition INTEGER PRIMARY KEY, valur_tansaction REAL, tags TEXT, date TEXT, toadd INTEGER);"
 
 	_, err = db.Exec(queryCreationSpending)
 	errorhand.HandlerError(err, errorhand.TakeFileLine()+" problem with the query")
@@ -36,6 +36,7 @@ func CreationTable() *sql.DB {
 
 func SaveTransaction(mon Movement) error {
 
+	errorhand.Controll(mon.Date.String())
 	_, err := db.Exec("INSERT INTO spendingMoney VALUES(" + strconv.Itoa(len(Movements)+1) + ", " + strconv.FormatFloat(float64(mon.Money), 'f', 2, 32) + ", '" + mon.Tags + "', '" + mon.Date.String() + "', " + strconv.FormatBool(mon.Add) + ");")
 
 	return err
@@ -119,10 +120,13 @@ func TakeValue() {
 	for rows.Next() {
 		var mov MovementRow
 
-		var m time.Time
+		var m string
 
 		err := rows.Scan(&mov.Id, &mov.Mov.Money, &mov.Mov.Tags, &m, &mov.Mov.Add)
 		errorhand.HandlerError(err, errorhand.TakeFileLine()+" error in the scan of the rows")
+
+		mov.Mov.Date, err = time.Parse("2006-01-02 15:04:05", m)
+		errorhand.HandlerError(err, errorhand.TakeFileLine()+" error in the parse of the date")
 
 		Movements = append(Movements, mov)
 	}

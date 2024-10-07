@@ -5,7 +5,6 @@ import (
 	"os"
 	"runtime"
 	"strconv"
-	"time"
 )
 
 func SetLogFile() *os.File {
@@ -38,6 +37,6 @@ func BadSaving(err error) {
 	}
 }
 
-func Controll(s time.Time) {
+func Controll(s string) {
 	log.Fatalln("item id (dropdown): ", s)
 }
