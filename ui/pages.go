@@ -2,7 +2,6 @@ package ui
 
 import (
 	"github.com/gdamore/tcell/v2"
-	//errorhand "github.com/mattemello/balanceTerminal/errorHand"
 	"github.com/rivo/tview"
 )
 

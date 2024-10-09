@@ -38,13 +38,22 @@ func insertCreation() *tview.Form {
 	form.SetButtonBackgroundColor(tcell.Color(tcell.ColorValues[12]))
 
 	form.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+		id, _ := form.GetFocusedItemIndex()
 
 		if event.Key() == tcell.KeyEsc {
 			pages.SwitchToPage("Main")
 		}
-		if event.Key() == 259 {
+		if event.Key() == 257 {
+
+			if id == 3 {
+				return event
+			}
+
 			SwitchFocus(form, 1)
-		} else if event.Key() == 260 {
+		} else if event.Key() == 258 {
+			if id == 3 {
+				return event
+			}
 			SwitchFocus(form, -1)
 		}
 
@@ -106,7 +115,7 @@ func insertCreation() *tview.Form {
 			//}
 		}
 
-		return true
+		return false
 
 	}, func(text string) {
 		if len(text) > 9 {
@@ -118,6 +127,7 @@ func insertCreation() *tview.Form {
 
 	form.AddDropDown("tags", sqlScript.AllTags, 0, func(option string, optionIndex int) {
 		move.Tags = option
+		SwitchFocus(form, 1)
 	})
 
 	move.Add = false

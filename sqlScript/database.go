@@ -36,8 +36,9 @@ func CreationTable() *sql.DB {
 
 func SaveTransaction(mon Movement) error {
 
-	errorhand.Controll(mon.Date.String())
-	_, err := db.Exec("INSERT INTO spendingMoney VALUES(" + strconv.Itoa(len(Movements)+1) + ", " + strconv.FormatFloat(float64(mon.Money), 'f', 2, 32) + ", '" + mon.Tags + "', '" + mon.Date.String() + "', " + strconv.FormatBool(mon.Add) + ");")
+	date := strconv.Itoa(mon.Date.Day()) + " " + strconv.Itoa(int(mon.Date.Month())) + " " + strconv.Itoa(mon.Date.Year())
+
+	_, err := db.Exec("INSERT INTO spendingMoney VALUES(" + strconv.Itoa(len(Movements)+1) + ", " + strconv.FormatFloat(float64(mon.Money), 'f', 2, 32) + ", '" + mon.Tags + "', '" + date + "', " + strconv.FormatBool(mon.Add) + ");")
 
 	return err
 
@@ -125,7 +126,7 @@ func TakeValue() {
 		err := rows.Scan(&mov.Id, &mov.Mov.Money, &mov.Mov.Tags, &m, &mov.Mov.Add)
 		errorhand.HandlerError(err, errorhand.TakeFileLine()+" error in the scan of the rows")
 
-		mov.Mov.Date, err = time.Parse("2006-01-02 15:04:05", m)
+		mov.Mov.Date, err = time.Parse("2 1 2006", m)
 		errorhand.HandlerError(err, errorhand.TakeFileLine()+" error in the parse of the date")
 
 		Movements = append(Movements, mov)

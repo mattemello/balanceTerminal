@@ -38,5 +38,5 @@ func BadSaving(err error) {
 }
 
 func Controll(s string) {
-	log.Fatalln("item id (dropdown): ", s)
+	log.Println("item id (dropdown): ", s)
 }

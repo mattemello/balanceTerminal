@@ -140,8 +140,6 @@ func writeMoney(mon sqlScript.Movement) *tview.Flex {
 		//t.SetTextColor(tcell.ColorRed)
 	}
 
-	flex.AddItem(tview.NewForm().AddCheckbox("", false, nil), 0, 1, true)
-
 	t.SetText(strconv.FormatFloat(float64(mon.Money), 'f', 2, 32))
 	t.SetTextAlign(tview.AlignCenter)
 	flex.AddItem(t, 0, 1, false)
