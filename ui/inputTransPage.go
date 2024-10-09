@@ -23,7 +23,7 @@ func insertFCreation() *tview.Flex {
 
 func footSetTran() *tview.TextView {
 
-	text1 := tview.NewTextView().SetText("(esc) back \n (" + string(tcell.RuneLArrow) + "/" + string(tcell.RuneRArrow) + ") move  ").SetTextColor(tcell.ColorSnow)
+	text1 := tview.NewTextView().SetText("(esc) back \n (TAB) move  ").SetTextColor(tcell.ColorSnow)
 	text1.SetTextAlign(tview.AlignCenter).SetBorder(true)
 
 	return text1
@@ -38,23 +38,10 @@ func insertCreation() *tview.Form {
 	form.SetButtonBackgroundColor(tcell.Color(tcell.ColorValues[12]))
 
 	form.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-		id, _ := form.GetFocusedItemIndex()
+		//id, _ := form.GetFocusedItemIndex()
 
 		if event.Key() == tcell.KeyEsc {
 			pages.SwitchToPage("Main")
-		}
-		if event.Key() == 257 {
-
-			if id == 3 {
-				return event
-			}
-
-			SwitchFocus(form, 1)
-		} else if event.Key() == 258 {
-			if id == 3 {
-				return event
-			}
-			SwitchFocus(form, -1)
 		}
 
 		return event
@@ -127,7 +114,6 @@ func insertCreation() *tview.Form {
 
 	form.AddDropDown("tags", sqlScript.AllTags, 0, func(option string, optionIndex int) {
 		move.Tags = option
-		SwitchFocus(form, 1)
 	})
 
 	move.Add = false

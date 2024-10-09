@@ -37,6 +37,6 @@ func BadSaving(err error) {
 	}
 }
 
-func Controll(s string) {
+func Controll(s rune) {
 	log.Println("item id (dropdown): ", s)
 }

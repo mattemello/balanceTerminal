@@ -17,7 +17,7 @@ func insertFTags() *tview.Flex {
 }
 
 func footSetTags() *tview.TextView {
-	text1 := tview.NewTextView().SetText("(esc) back \n (" + string(tcell.RuneLArrow) + "/" + string(tcell.RuneRArrow) + ") move  ").SetTextColor(tcell.ColorSnow)
+	text1 := tview.NewTextView().SetText("(esc) back \n (" + string(tcell.RuneUArrow) + "/" + string(tcell.RuneDArrow) + ") move  ").SetTextColor(tcell.ColorSnow)
 	text1.SetTextAlign(tview.AlignCenter).SetBorder(true)
 
 	return text1
@@ -36,9 +36,10 @@ func insertTags() *tview.Form {
 		if event.Key() == tcell.KeyEsc {
 			pages.SwitchToPage("Main")
 		}
-		if event.Key() == 259 {
+
+		if event.Key() == 258 {
 			SwitchFocus(form, 1)
-		} else if event.Key() == 260 {
+		} else if event.Key() == 257 {
 			SwitchFocus(form, -1)
 		}
 
