@@ -20,10 +20,8 @@ func menuCreation() *tview.Flex {
 			pages.AddAndSwitchToPage("Main", menuCreation(), true)
 		} else if event.Rune() == 116 {
 			pages.AddAndSwitchToPage("Tags", insertFTags(), true)
-		} else if event.Key() == 257 {
-			//TO-DO UP
-		} else if event.Key() == 258 {
-			//TO-DO DOWN
+		} else if event.Rune() == 100 {
+			pages.AddAndSwitchToPage("Delet", deletMain(), true)
 		}
 
 		if event.Rune() == 113 {
