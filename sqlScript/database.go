@@ -133,3 +133,5 @@ func TakeValue() {
 	}
 
 }
+
+func DeletPay() {}

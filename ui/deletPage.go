@@ -4,7 +4,6 @@ import (
 	"strconv"
 
 	"github.com/gdamore/tcell/v2"
-	errorhand "github.com/mattemello/balanceTerminal/errorHand"
 	"github.com/mattemello/balanceTerminal/sqlScript"
 	"github.com/rivo/tview"
 )
@@ -20,45 +19,41 @@ func deletMain() *tview.Flex /*i want to do this?*/ {
 	return flex
 }
 
-func createCheck(n int, form *tview.Form) *tview.Form {
-
-	form.AddCheckbox(strconv.Itoa(n), false, func(checked bool) {
-
-		errorhand.Controll(n)
+func createCheck(form *tview.Form, mon int) {
+	form.AddCheckbox("", false, func(checked bool) {
 		if checked == true {
-			ToEliminate[n] = true
+			ToEliminate[mon] = true
 		} else {
-			_, contained := ToEliminate[n]
+			_, contained := ToEliminate[mon]
 
 			if !contained {
 
-			} else if ToEliminate[n] {
-				ToEliminate[n] = false
+			} else if ToEliminate[mon] {
+				ToEliminate[mon] = false
 			}
 		}
-	}).SetFieldBackgroundColor(tcell.Color(tcell.ColorValues[12]))
-
-	form.SetFieldTextColor(tcell.Color(tcell.ColorValues[11]))
-
-	return form
-
+	})
 }
 
 func addMoneywithCheck() *tview.Flex {
 
 	flex := flexCreation()
 	form := tview.NewForm()
+	form.SetDrawFunc(func(screen tcell.Screen, x, y, w, h int) (int, int, int, int) {
+		y += h / 2
+		return x, y, w, h
+	})
 
-	form.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+	flex.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 
 		if event.Key() == tcell.KeyEsc {
 			pages.SwitchToPage("Main")
-		}
-
-		if event.Key() == 257 {
-			SwitchFocus(form, 0)
-		} else if event.Key() == 256 {
-			SwitchFocus(form, -2)
+		} else if event.Key() == 257 {
+			SwitchFocus(form, -1)
+		} else if event.Key() == 258 {
+			SwitchFocus(form, 1)
+		} else if event.Rune() == 107 {
+			sqlScript.DeletPay()
 		}
 
 		return event
@@ -71,22 +66,20 @@ func addMoneywithCheck() *tview.Flex {
 	}
 
 	for i := 0; i < max; i++ {
-		if i == 0 {
+		createCheck(form, sqlScript.Movements[len(sqlScript.Movements)-i-1].Id)
+	}
 
-			flex.AddItem(writeMoneywithCheck(sqlScript.Movements[len(sqlScript.Movements)-i-1], form, true), 0, 1, true)
-		} else {
-			flex.AddItem(writeMoneywithCheck(sqlScript.Movements[len(sqlScript.Movements)-i-1], form, false), 0, 1, false)
-		}
+	for i := 0; i < max; i++ {
+		flex.AddItem(writeMoneywithCheck(sqlScript.Movements[len(sqlScript.Movements)-i-1], form, i), 0, 1, true)
 	}
 
 	for i := 10 - len(sqlScript.Movements); i > 0; i-- {
 		flex.AddItem(tview.NewBox().SetBorder(true), 0, 1, false)
 	}
-
 	return flex
 }
 
-func writeMoneywithCheck(mon sqlScript.MovementRow, form *tview.Form, hasFocus bool) *tview.Flex {
+func writeMoneywithCheck(mon sqlScript.MovementRow, form *tview.Form, i int) *tview.Flex {
 	flex := tview.NewFlex()
 
 	t := tview.NewTextView()
@@ -94,8 +87,8 @@ func writeMoneywithCheck(mon sqlScript.MovementRow, form *tview.Form, hasFocus b
 	t2 := tview.NewTextView()
 
 	flex.SetBorder(true)
-
-	flex.AddItem(createCheck(mon.Id, form), 0, 1, hasFocus)
+	form.SetFieldBackgroundColor(tcell.Color(tcell.ColorValues[12])).SetFieldTextColor(tcell.Color(tcell.ColorValues[11]))
+	flex.AddItem(form.GetFormItem(i), 0, 1, true)
 
 	t.SetText(strconv.FormatFloat(float64(mon.Mov.Money), 'f', 2, 32))
 	t.SetTextAlign(tview.AlignCenter)
