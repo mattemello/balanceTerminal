@@ -134,4 +134,15 @@ func TakeValue() {
 
 }
 
-func DeletPay() {}
+func DeletPay(toEliminate map[int]bool) {
+
+	for in, el := range toEliminate {
+		if el {
+			_, err := db.Exec("DELETE FROM spendingMoney WHERE id_transition=" + strconv.Itoa(in) + ";")
+			errorhand.HandlerError(err, errorhand.TakeFileLine()+" error in the delet of the row")
+			//Movements[].Id = nil
+			//TO-DO eliminare dall'array && modify the ammount of total money
+		}
+	}
+
+}

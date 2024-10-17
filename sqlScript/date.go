@@ -30,6 +30,8 @@ var TotalMoney Money
 
 var Movements []MovementRow
 
+//TO-DO make it a map?
+
 func SaveMove(move Movement) {
 
 	var mov MovementRow

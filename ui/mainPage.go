@@ -35,6 +35,7 @@ func menuCreation() *tview.Flex {
 	flex.AddItem(addMoneyUi(), 0, 7, true)
 
 	flex.AddItem(footSet(), 0, 1, false)
+	flex.SetBackgroundColor(tcell.Color(tcell.ColorValues[255]))
 
 	return flex
 }
@@ -61,6 +62,7 @@ func addMoneyUi() *tview.Flex {
 	}
 
 	for i := 0; i < max; i++ {
+
 		flex.AddItem(writeMoney(sqlScript.Movements[len(sqlScript.Movements)-i-1].Mov), 0, 1, true)
 	}
 

@@ -8,13 +8,14 @@ import (
 	"github.com/rivo/tview"
 )
 
-var ToEliminate = make(map[int]bool)
+var toEliminate = make(map[int]bool)
 
 func deletMain() *tview.Flex /*i want to do this?*/ {
 
 	flex := flexCreation()
 
-	flex.AddItem(addMoneywithCheck(), 0, 1, true)
+	flex.AddItem(addMoneywithCheck(), 0, 7, true)
+	flex.AddItem(footSetDelet(), 0, 1, true)
 
 	return flex
 }
@@ -22,14 +23,14 @@ func deletMain() *tview.Flex /*i want to do this?*/ {
 func createCheck(form *tview.Form, mon int) {
 	form.AddCheckbox("", false, func(checked bool) {
 		if checked == true {
-			ToEliminate[mon] = true
+			toEliminate[mon] = true
 		} else {
-			_, contained := ToEliminate[mon]
+			_, contained := toEliminate[mon]
 
 			if !contained {
 
-			} else if ToEliminate[mon] {
-				ToEliminate[mon] = false
+			} else if toEliminate[mon] {
+				toEliminate[mon] = false
 			}
 		}
 	})
@@ -53,7 +54,9 @@ func addMoneywithCheck() *tview.Flex {
 		} else if event.Key() == 258 {
 			SwitchFocus(form, 1)
 		} else if event.Rune() == 107 {
-			sqlScript.DeletPay()
+			sqlScript.DeletPay(toEliminate)
+			pages.RemovePage("menu")
+			pages.AddAndSwitchToPage("Main", menuCreation(), true)
 		}
 
 		return event
@@ -76,6 +79,7 @@ func addMoneywithCheck() *tview.Flex {
 	for i := 10 - len(sqlScript.Movements); i > 0; i-- {
 		flex.AddItem(tview.NewBox().SetBorder(true), 0, 1, false)
 	}
+
 	return flex
 }
 
@@ -116,4 +120,12 @@ func writeMoneywithCheck(mon sqlScript.MovementRow, form *tview.Form, i int) *tv
 	})
 
 	return flex
+}
+
+func footSetDelet() *tview.TextView {
+
+	text1 := tview.NewTextView().SetText("(esc) back \n (" + string(tcell.RuneUArrow) + "/" + string(tcell.RuneDArrow) + ") move  \n (k) save").SetTextColor(tcell.ColorSnow)
+	text1.SetTextAlign(tview.AlignCenter).SetBorder(true)
+
+	return text1
 }
