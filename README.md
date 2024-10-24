@@ -12,10 +12,10 @@ Aftmher you have your installation of golang you have to lunch this command:
     make install
 ```
 
-Now you can use it by type:
+Now you can use it by type (in the directori):
 
 ```
-    balanceTerminal
+    ./balanceTerminal
 ```
 
 There are no tags to add at the command.
