@@ -1,4 +1,4 @@
-all: create-folder build-go
+install: create-folder build-go
 
 create-folder: 
 	if [ ! -d "./tmp" ]; then\
