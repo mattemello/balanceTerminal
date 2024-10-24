@@ -5,6 +5,7 @@ import (
 	"os"
 	"runtime"
 	"strconv"
+	"time"
 )
 
 func SetLogFile() *os.File {
@@ -37,6 +38,6 @@ func BadSaving(err error) {
 	}
 }
 
-func Controll(s int) {
+func Controll(s time.Month) {
 	log.Println("item id (dropdown): ", s)
 }

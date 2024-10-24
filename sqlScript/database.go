@@ -38,7 +38,13 @@ func SaveTransaction(mon Movement) error {
 
 	date := strconv.Itoa(mon.Date.Day()) + " " + strconv.Itoa(int(mon.Date.Month())) + " " + strconv.Itoa(mon.Date.Year())
 
-	_, err := db.Exec("INSERT INTO spendingMoney VALUES(" + strconv.Itoa(len(Movements)+1) + ", " + strconv.FormatFloat(float64(mon.Money), 'f', 2, 32) + ", '" + mon.Tags + "', '" + date + "', " + strconv.FormatBool(mon.Add) + ");")
+	id := 0
+
+	if len(Movements) != 0 {
+		id = Movements[len(Movements)-1].Id + 1
+	}
+
+	_, err := db.Exec("INSERT INTO spendingMoney VALUES(" + strconv.Itoa(id) + ", " + strconv.FormatFloat(float64(mon.Money), 'f', 2, 32) + ", '" + mon.Tags + "', '" + date + "', " + strconv.FormatBool(mon.Add) + ");")
 
 	return err
 
@@ -136,13 +142,31 @@ func TakeValue() {
 
 func DeletPay(toEliminate map[int]bool) {
 
+	var sum float32
+
 	for in, el := range toEliminate {
 		if el {
 			_, err := db.Exec("DELETE FROM spendingMoney WHERE id_transition=" + strconv.Itoa(in) + ";")
 			errorhand.HandlerError(err, errorhand.TakeFileLine()+" error in the delet of the row")
-			//Movements[].Id = nil
-			//TO-DO eliminare dall'array && modify the ammount of total money
+			for i, val := range Movements {
+				if val.Id == in {
+					if val.Mov.Add {
+						sum -= val.Mov.Money
+					} else {
+						sum += val.Mov.Money
+					}
+					Movements = append(Movements[:i], Movements[i+1:]...)
+
+					break
+				}
+
+			}
 		}
 	}
+
+	TotalMoney.Total = TotalMoneys[len(TotalMoneys)-1].RowMon.Total + sum
+	TotalMoney.LastUp = time.Now()
+
+	SaveMoneyDB(TotalMoney.Total, TotalMoney.LastUp)
 
 }

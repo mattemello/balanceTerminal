@@ -91,7 +91,8 @@ func writeMoneywithCheck(mon sqlScript.MovementRow, form *tview.Form, i int) *tv
 	t2 := tview.NewTextView()
 
 	flex.SetBorder(true)
-	form.SetFieldBackgroundColor(tcell.Color(tcell.ColorValues[12])).SetFieldTextColor(tcell.Color(tcell.ColorValues[11]))
+	form.SetFieldBackgroundColor(tcell.Color(tcell.ColorValues[12]))
+	form.SetFieldTextColor(tcell.ColorWhite)
 	flex.AddItem(form.GetFormItem(i), 0, 1, true)
 
 	t.SetText(strconv.FormatFloat(float64(mon.Mov.Money), 'f', 2, 32))

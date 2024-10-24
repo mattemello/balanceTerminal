@@ -4,8 +4,8 @@
 [x] things i want it to do
 [x] decide the database
 [x] save the date
-[ ] controll the data
-[ ] think who to delet the data
+[x] controll the data
+[x] think who to delet the data
 
 # make file
 create the dir tmp
@@ -26,7 +26,6 @@ or new one
 # organaize progect
 - will have tags
 - takes number in input
-- recursive pays
 - balance controll
 
 # database

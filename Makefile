@@ -1,7 +1,9 @@
-all: create-folder create-db build-go
+all: create-folder build-go
 
 create-folder: 
-	mkdir tmp
+	if [ ! -d "./tmp" ]; then\
+		mkdir tmp;\
+	fi 
 
-create-db:
-	
+build-go: 
+	go build

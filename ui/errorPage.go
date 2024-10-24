@@ -7,7 +7,20 @@ import (
 
 func PageError(m string) *tview.Modal {
 
+	enter := true
+
 	modal := tview.NewModal()
+
+	modal.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+
+		if enter && event.Key() == tcell.KeyEnter {
+			enter = false
+			return nil
+		}
+
+		return event
+
+	})
 
 	modal.SetText(m)
 	modal.AddButtons([]string{"go back"})

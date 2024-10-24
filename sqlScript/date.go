@@ -30,13 +30,15 @@ var TotalMoney Money
 
 var Movements []MovementRow
 
-//TO-DO make it a map?
-
 func SaveMove(move Movement) {
 
 	var mov MovementRow
 
-	mov.Id = len(Movements) + 1
+	if len(Movements) == 0 {
+		mov.Id = 0
+	} else {
+		mov.Id = Movements[len(Movements)-1].Id + 1
+	}
 	mov.Mov = move
 
 	Movements = append(Movements, mov)

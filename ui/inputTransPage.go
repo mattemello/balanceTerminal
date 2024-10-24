@@ -124,25 +124,30 @@ func insertCreation() *tview.Form {
 			move.Date = time.Now()
 		}
 
-		controllData(move.Date)
-
-		err := sqlScript.SaveTransaction(move)
-		if err != nil {
-			errorhand.BadSaving(err)
-			pages.AddAndSwitchToPage("err", PageError("Error whit the save, controll the log file"), true)
-		} else {
-			sqlScript.SaveMove(move)
-			pages.RemovePage("menu")
-			pages.AddAndSwitchToPage("Main", menuCreation(), true)
+		if controllData(move.Date) {
+			err := sqlScript.SaveTransaction(move)
+			if err != nil {
+				errorhand.BadSaving(err)
+				pages.AddAndSwitchToPage("err", PageError("Error whit the save, controll the log file"), true)
+			} else {
+				sqlScript.SaveMove(move)
+				pages.RemovePage("menu")
+				pages.AddAndSwitchToPage("Main", menuCreation(), true)
+			}
 		}
+
 	})
 
 	return form
 
 }
 
-func controllData(mon time.Time) {
-	if time.Now().Day() < mon.Day() || time.Now().Year() < mon.Year() {
+func controllData(mon time.Time) bool {
+	if mon.Compare(time.Now()) > 0 {
+		errorhand.Controll(mon.Month())
 		pages.AddAndSwitchToPage("err", PageError("The date is not valid"), true)
+		return false
 	}
+
+	return true
 }
